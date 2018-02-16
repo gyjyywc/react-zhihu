@@ -11,7 +11,16 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    // 开发环境跨域
+    proxyTable: {
+      '/api': {
+        target: 'http://news-at.zhihu.com',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/api/4'
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST

@@ -1,9 +1,21 @@
 <template>
-  <div>hello world</div>
+  <div>
+    <banner/>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import Banner from 'common/banner/banner'
+  import {getLatest} from 'api/index'
+
   export default {
+    name: 'index',
+    created() {
+      getLatest()
+    },
+    components: {
+      Banner
+    }
   }
 </script>
 
