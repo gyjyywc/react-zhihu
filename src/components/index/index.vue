@@ -11,7 +11,18 @@
   export default {
     name: 'index',
     created() {
-      getLatest()
+      this._getLatest()
+    },
+    methods: {
+      _getLatest() {
+        getLatest()
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.error('内部错误，错误原因: ' + error)
+        })
+      }
     },
     components: {
       Banner
