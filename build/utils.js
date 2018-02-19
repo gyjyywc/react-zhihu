@@ -92,7 +92,7 @@ exports.styleLoaders = function (options) {
 //     const filename = error.file && error.file.split('!').pop()
 //
 //     notifier.notify({
-//       title: packageConfig.name,
+//       m-header: packageConfig.name,
 //       message: severity + ': ' + error.name,
 //       subtitle: filename || '',
 //       icon: path.join(__dirname, 'logo.png')
