@@ -1,7 +1,7 @@
 <template>
   <div>
     <m-header/>
-    <banner :topList="topList"/>
+    <banner :topList="topList"></banner>
   </div>
 </template>
 

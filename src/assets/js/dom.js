@@ -16,6 +16,7 @@ let vendor = (() => {
   return false
 })()
 
+// export 部分
 export function prefixStyle(style) {
   if (vendor === false) {
     return
@@ -25,3 +26,18 @@ export function prefixStyle(style) {
   }
   return vendor + style.charAt(0).toUpperCase() + style.substr(1)
 }
+
+export function addClass(el, clsName) {
+  if (!hasClass(el, clsName)) {
+    let newCls = el.className.split(' ')
+    newCls.push(clsName)
+    el.className = newCls.join(' ')
+  }
+}
+
+export function hasClass(el, clsName) {
+  let reg = new RegExp('(^|\\s)' + clsName + '(\\s|$)')
+  return reg.test(el.className)
+}
+
+export const windowWith = document.body.clientWidth || document.documentElement.clientWidth
