@@ -1,8 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import Splash from 'components/splash/splash';
+import 'assets/stylus/index.styl'
+import fastclick from 'fastclick'
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+
+fastclick.attach(document.body);
+
+ReactDOM.render(<Splash />, document.getElementById('root'));
+
 registerServiceWorker();
