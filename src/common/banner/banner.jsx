@@ -65,7 +65,6 @@ class Banner extends Component {
   }
 
   _initDots() {
-    console.log(111)
     this.dots = new Array(this.children.length);
   }
 
@@ -81,6 +80,14 @@ class Banner extends Component {
   }
 
   componentDidMount() {
+    setTimeout(() => {
+      this._setSliderWidthAndHeight();
+      this._initDots();
+      this._initScroll();
+      if (this.loop) {
+        this._play();
+      }
+    }, 300)
   }
 
   render() {
