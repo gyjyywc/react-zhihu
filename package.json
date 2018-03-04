@@ -48,7 +48,8 @@
     "react-lazyload": "^1.0.4",
     "better-scroll": "^1.8.1",
     "stylus": "^0.54.5",
-    "stylus-loader": "^2.1.1"
+    "stylus-loader": "^2.1.1",
+    "axios": "^0.18.0"
   },
   "scripts": {
     "start": "node scripts/start.js",

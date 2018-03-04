@@ -17,7 +17,7 @@ class Splash extends Component {
   render() {
     return (
       <div className="splash-wrapper">
-        <img className="splash" id="splashImg" src={require('assets/imgs/splash.jpg')} alt="你,的名字."/>
+        <img className="splash" id="splashImg" src={require('./splash.jpg')} alt="你,的名字."/>
       </div>
     );
   }
