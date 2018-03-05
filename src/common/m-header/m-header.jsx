@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
 import './m-header.styl';
+import PropTypes from 'prop-types';
 
 class MHeader extends Component {
   static defaultProps = {
     title: '首页'
+  };
+
+  static propTypes = {
+    title: PropTypes.string
   };
 
   render() {

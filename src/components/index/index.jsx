@@ -5,13 +5,17 @@ import Banner from "common/banner/banner";
 
 class Index extends Component {
   // banner 上的热门
-  topList = [];
+
+  state = {
+    topList: []
+  };
 
   componentWillMount() {
     getLatest()
       .then((response) => {
-        this.topList = response.top_stories;
-        console.log(this.topList)
+        this.setState({
+          topList: response.top_stories
+        });
       })
       .catch((error) => {
         console.error('内部错误，错误原因: ' + error);
@@ -22,7 +26,7 @@ class Index extends Component {
     return (
       <div>
         <MHeader title='首页'/>
-        <Banner />
+        <Banner topList={this.state.topList}/>
       </div>
     );
   }
