@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import BScroll from 'better-scroll';
 import {windowWith, addClass} from 'assets/js/dom';
-import {getImage} from 'assets/js/common';
+// import {getImage} from 'assets/js/common';
 import PropTypes from 'prop-types';
 import './banner.styl';
 
@@ -9,8 +9,10 @@ const PERCENT = 0.613;
 
 class Banner extends Component {
 
-  dots = [];
-  currentIndex = 0;
+  state = {
+    dots: [],
+    currentIndex: 0
+  };
 
   // 定义默认值
   static defaultProps = {
@@ -28,10 +30,22 @@ class Banner extends Component {
     interval: PropTypes.number,
   };
 
+  componentDidMount() {
+    setTimeout(() => {
+      this._setSliderWidthAndHeight();
+      this._initDots();
+      this._initScroll();
+      if (this.props.loop) {
+        this._play();
+      }
+    }, 500);
+  }
+
   _getBackground(url) {
-    let css = getImage(url);
+    // 通过 <meta name="referrer" content="never"> 解决了
+    // let css = getImage(url);
     return {
-      backgroundImage: `url("${css}")`
+      backgroundImage: `url("${url}")`
     };
   }
 
@@ -69,7 +83,9 @@ class Banner extends Component {
       if (this.props.loop) {
         index -= 1
       }
-      this.currentIndex = index;
+      this.setState({
+        currentIndex: index
+      });
       if (this.props.autoPlay) {
         this._play();
       }
@@ -87,11 +103,18 @@ class Banner extends Component {
   }
 
   _initDots() {
-    this.dots = new Array(this.children.length);
+    // 保证模板里 key 值取 id 为唯一值
+    this.setState({
+      dots: Array.from(this.children).map((child, index) => {
+        return {
+          id: index
+        };
+      })
+    });
   }
 
   _play() {
-    let index = this.currentIndex + 1;
+    let index = this.state.currentIndex + 1;
     if (this.props.loop) {
       index += 1;
       clearTimeout(this.sliderTimer);
@@ -101,35 +124,34 @@ class Banner extends Component {
     }
   }
 
-
-  componentDidMount() {
-    setTimeout(() => {
-      this._setSliderWidthAndHeight();
-      this._initDots();
-      this._initScroll();
-      if (this.props.loop) {
-        this._play();
-      }
-    }, 500);
-  }
-
   render() {
+
+    let topStoryPic = this.props.topList.map((topStory) => {
+      return (
+        <div className="pic" style={this._getBackground(topStory.image)} key={topStory.id}>
+          <em>{topStory.title}</em>
+        </div>
+      );
+    });
+
+    let dots = this.state.dots.map((dot, index) => {
+      let dotElement;
+      if (this.state.currentIndex === index) {
+        dotElement = <span className="dot active" key={index} />;
+      } else {
+        dotElement = <span className="dot" key={index} />
+      }
+      return (dotElement);
+
+    });
 
     return (
       <div className="slider" id="slider">
         <div className="slider-group" id="sliderGroup">
-          {
-            this.props.topList.map((topStory) => {
-              return (
-                <div className="pic" style={this._getBackground(topStory.image)} key={topStory.id}>
-                  <em>{topStory.title}</em>
-                </div>
-              )
-            })
-          }
+          {topStoryPic}
         </div>
         <div className="dots">
-          <span className="dot"/>
+          {dots}
         </div>
       </div>
     );
