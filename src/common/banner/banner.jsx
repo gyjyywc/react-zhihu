@@ -5,8 +5,6 @@ import {windowWith, addClass} from 'assets/js/dom';
 import PropTypes from 'prop-types';
 import './banner.styl';
 
-const PERCENT = 0.613;
-
 class Banner extends Component {
 
   state = {
@@ -21,6 +19,8 @@ class Banner extends Component {
     autoPlay: false,
     interval: 4000
   };
+
+  PERCENT = 0.613;
 
   // 定义类型
   static propTypes = {
@@ -52,7 +52,7 @@ class Banner extends Component {
   _setSliderWidthAndHeight() {
     this.children = document.getElementById('sliderGroup').children;
     let width = 0;
-    let height = Math.round(windowWith * PERCENT);
+    let height = Math.round(windowWith * this.PERCENT);
     let sliderWidth = document.getElementById('slider').clientWidth;
     for (let i = 0; i < this.children.length; i++) {
       let child = this.children[i];
@@ -128,8 +128,11 @@ class Banner extends Component {
 
     let topStoryPic = this.props.topList.map((topStory) => {
       return (
-        <div className="pic" style={this._getBackground(topStory.image)} key={topStory.id}>
-          <em>{topStory.title}</em>
+        <div key={topStory.id}>
+          <a>
+            <img src={topStory.image} alt="" />
+            <em>{topStory.title}</em>
+          </a>
         </div>
       );
     });

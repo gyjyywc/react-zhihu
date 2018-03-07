@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {getLatest} from 'api/index';
-import MHeader from "common/m-header/m-header";
-import Banner from "common/banner/banner";
+import MHeader from 'common/m-header/m-header';
+import Banner from 'common/banner/banner';
+import './index.styl'
 
 class Index extends Component {
   // banner 上的热门
@@ -25,8 +26,12 @@ class Index extends Component {
   render() {
     return (
       <div>
-        <MHeader title='首页'/>
-        <Banner topList={this.state.topList}/>
+        <MHeader title='首页' />
+        <div className="slider-wrapper">
+          <div className="slider-content">
+            <Banner topList={this.state.topList} />
+          </div>
+        </div>
       </div>
     );
   }
