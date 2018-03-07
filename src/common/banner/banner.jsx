@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import BScroll from 'better-scroll';
 import {windowWith, addClass} from 'assets/js/dom';
-// import {getImage} from 'assets/js/common';
 import PropTypes from 'prop-types';
 import './banner.styl';
 
@@ -16,8 +15,10 @@ class Banner extends Component {
   static defaultProps = {
     topList: [],
     loop: true,
-    autoPlay: false,
-    interval: 4000
+    autoPlay: true,
+    interval: 4000,
+    threshold: 0.3,
+    speed: 400
   };
 
   PERCENT = 0.613;
@@ -28,25 +29,34 @@ class Banner extends Component {
     loop: PropTypes.bool,
     autoPlay: PropTypes.bool,
     interval: PropTypes.number,
+    threshold: PropTypes.number,
+    speed: PropTypes.number,
   };
 
   componentDidMount() {
+    this._update();
+  }
+
+  _update() {
+    if (this.scroll) {
+      this.scroll.destroy();
+    }
     setTimeout(() => {
-      this._setSliderWidthAndHeight();
-      this._initDots();
-      this._initScroll();
-      if (this.props.loop) {
-        this._play();
-      }
+      this._init();
     }, 500);
   }
 
-  _getBackground(url) {
-    // 通过 <meta name="referrer" content="never"> 解决了
-    // let css = getImage(url);
-    return {
-      backgroundImage: `url("${url}")`
-    };
+  _init() {
+    clearTimeout(this.timer);
+    this.setState({
+      currentPageIndex: 0
+    });
+    this._setSliderWidthAndHeight();
+    this._initDots();
+    this._initScroll();
+    if (this.props.autoPlay) {
+      this._play();
+    }
   }
 
   _setSliderWidthAndHeight() {
@@ -73,16 +83,15 @@ class Banner extends Component {
       scrollX: true,
       scrollY: false,
       momentum: false,
-      snap: true,
-      snapLoop: this.props.loop,
-      snapThreshold: 0.3,
-      snapSpeed: 400
+      snap: {
+        loop: this.props.loop,
+        threshold: this.props.threshold,
+        speed: this.props.speed
+      },
+      bounce: false
     });
     this.scroll.on('scrollEnd', () => {
       let index = this.scroll.getCurrentPage().pageX;
-      if (this.props.loop) {
-        index -= 1
-      }
       this.setState({
         currentIndex: index
       });
@@ -97,7 +106,7 @@ class Banner extends Component {
     });
     this.scroll.on('beforeScrollStart', () => {
       if (this.props.autoPlay) {
-        clearTimeout(this.sliderTimer)
+        clearTimeout(this.timer)
       }
     });
   }
@@ -114,18 +123,13 @@ class Banner extends Component {
   }
 
   _play() {
-    let index = this.state.currentIndex + 1;
-    if (this.props.loop) {
-      index += 1;
-      clearTimeout(this.sliderTimer);
-      this.sliderTimer = setTimeout(() => {
-        this.scroll.goToPage(index, 0, 400)
-      }, this.props.interval);
-    }
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.scroll.next();
+    }, this.props.interval);
   }
 
   render() {
-
     let topStoryPic = this.props.topList.map((topStory) => {
       return (
         <div key={topStory.id}>
