@@ -30,36 +30,36 @@ class Banner extends Component {
     autoPlay: PropTypes.bool,
     interval: PropTypes.number,
     threshold: PropTypes.number,
-    speed: PropTypes.number,
+    speed: PropTypes.number
   };
 
   componentDidMount() {
-    this._update();
+    this.update();
   }
 
-  _update() {
+  update() {
     if (this.scroll) {
       this.scroll.destroy();
     }
     setTimeout(() => {
-      this._init();
+      this.init();
     }, 500);
   }
 
-  _init() {
+  init() {
     clearTimeout(this.timer);
     this.setState({
       currentPageIndex: 0
     });
-    this._setSliderWidthAndHeight();
-    this._initDots();
-    this._initScroll();
+    this.setSliderWidthAndHeight();
+    this.initDots();
+    this.initScroll();
     if (this.props.autoPlay) {
-      this._play();
+      this.play();
     }
   }
 
-  _setSliderWidthAndHeight() {
+  setSliderWidthAndHeight() {
     this.children = document.getElementById('sliderGroup').children;
     let width = 0;
     let height = Math.round(windowWith * this.PERCENT);
@@ -78,7 +78,7 @@ class Banner extends Component {
     document.getElementById('sliderGroup').style.height = height + 'px';
   }
 
-  _initScroll() {
+  initScroll() {
     this.scroll = new BScroll(document.getElementById('slider'), {
       scrollX: true,
       scrollY: false,
@@ -96,12 +96,12 @@ class Banner extends Component {
         currentIndex: index
       });
       if (this.props.autoPlay) {
-        this._play();
+        this.play();
       }
     });
     this.scroll.on('touchend ', () => {
       if (this.props.autoPlay) {
-        this._play();
+        this.play();
       }
     });
     this.scroll.on('beforeScrollStart', () => {
@@ -111,7 +111,7 @@ class Banner extends Component {
     });
   }
 
-  _initDots() {
+  initDots() {
     // 保证模板里 key 值取 id 为唯一值
     this.setState({
       dots: Array.from(this.children).map((child, index) => {
@@ -122,18 +122,23 @@ class Banner extends Component {
     });
   }
 
-  _play() {
+  play() {
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       this.scroll.next();
     }, this.props.interval);
   }
 
+  // 只做事件分发，不做业务处理。解耦
+  emitNewsId(topStory) {
+    this.props.emit(topStory);
+  }
+
   render() {
     let topStoryPic = this.props.topList.map((topStory) => {
       return (
         <div key={topStory.id}>
-          <a>
+          <a onClick={() => this.emitNewsId(topStory)}>
             <img src={topStory.image} alt="" />
             <em>{topStory.title}</em>
           </a>
