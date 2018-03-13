@@ -2,13 +2,13 @@ import './splash.styl';
 import React, {Component} from 'react';
 import {prefixStyle} from 'assets/js/dom';
 
-const TRANSFORM = prefixStyle('transform');
-
 class Splash extends Component {
+
+  transform = prefixStyle('transform');
 
   componentDidMount() {
     setTimeout(() => {
-      document.getElementById('splashImg').style[TRANSFORM] = 'scale(1.1)'
+      document.getElementById('splashImg').style[this.transform] = 'scale(1.1)'
     }, 1);
     setTimeout(() => {
       this.props.history.push('/index');

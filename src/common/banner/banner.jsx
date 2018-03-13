@@ -130,15 +130,15 @@ class Banner extends Component {
   }
 
   // 只做事件分发，不做业务处理。解耦
-  emitNewsId(topStory) {
-    this.props.emit(topStory);
+  emitNewsId(topStory, history) {
+    this.props.emit(topStory, history);
   }
 
   render() {
     let topStoryPic = this.props.topList.map((topStory) => {
       return (
         <div key={topStory.id}>
-          <a onClick={() => this.emitNewsId(topStory)}>
+          <a onClick={() => this.emitNewsId(topStory, this.props.history)}>
             <img src={topStory.image} alt="" />
             <em>{topStory.title}</em>
           </a>

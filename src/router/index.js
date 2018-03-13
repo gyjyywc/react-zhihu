@@ -15,7 +15,7 @@ class RouteConfig extends Component {
         <Switch>
           <Route path="/" exact component={Splash}/>
           <Route path="/index" component={Index}/>
-          <Route path="/news" component={News}/>
+          <Route path="/news/:newsId" component={News}/>
           <Redirect to="/"/>
         </Switch>
       </HashRouter>
