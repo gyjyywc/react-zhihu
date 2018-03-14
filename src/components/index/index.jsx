@@ -27,7 +27,7 @@ class Index extends Component {
       })
   }
 
-  handleEmit(newsItem, history) {
+  static handleEmit(newsItem, history) {
     history.push('/news/' + newsItem.id);
   }
 
@@ -37,7 +37,7 @@ class Index extends Component {
         <MHeader title='首页' />
         <div className="slider-wrapper">
           <div className="slider-content">
-            <Banner topList={this.state.topList} history={this.props.history} emit={this.handleEmit} />
+            <Banner topList={this.state.topList} history={this.props.history} emit={Index.handleEmit} />
           </div>
         </div>
         <ListView viewList={this.state.storyList} />
