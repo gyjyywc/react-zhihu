@@ -14,20 +14,41 @@ class ListView extends Component {
     viewList: PropTypes.array.isRequired
   };
 
-  render() {
 
-    let view = this.props.viewList.map((viewItem) => {
-      return (
-        <div className="list-item" key={viewItem.id}>
-          <em>{viewItem.title}</em>
-          <img src={viewItem.images[0]} alt="" />
-        </div>
-      );
-    });
+  render() {
+    let dateTitle;
+    if (this.props.date) {
+      let year = this.props.date.substr(0, 4);
+      let month = this.props.date.substr(4, 2);
+      let day = this.props.date.substr(6, 2);
+      let date = year + '-' + month + '-' + day + ' 00:00:00';
+      let latestDate = new Date(date).getTime();
+      let now = new Date().getTime();
+      let days = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+      let dayStr = days[new Date(date).getDay() - 1];
+      if ((now - latestDate) / 1000 / 60 / 60 < 30) {
+        dateTitle = '今日热闻';
+      } else {
+        dateTitle = `${month}月${day}日 ${dayStr}`
+      }
+    }
+
+    let view;
+    if (this.props.viewList) {
+      view = this.props.viewList.map((viewItem) => {
+        return (
+          <div className="list-item" key={viewItem.id}>
+            <em>{viewItem.title}</em>
+            <img src={viewItem.images[0]} alt="" />
+          </div>
+        );
+      });
+    }
+
 
     return (
       <div className="list-wrapper">
-        {view}
+        <p className="list-date">{dateTitle}</p>{view}
       </div>
     );
   }

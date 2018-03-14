@@ -11,6 +11,7 @@ class Index extends Component {
   state = {
     topList: [],
     storyList: [],
+    date: '',
     newsId: 0
   };
 
@@ -19,7 +20,8 @@ class Index extends Component {
       .then((response) => {
         this.setState({
           topList: response.top_stories,
-          storyList: response.stories
+          storyList: response.stories,
+          date: response.date
         });
       })
       .catch((error) => {
@@ -40,7 +42,7 @@ class Index extends Component {
             <Banner topList={this.state.topList} history={this.props.history} emit={Index.handleEmit} />
           </div>
         </div>
-        <ListView viewList={this.state.storyList} />
+        <ListView viewList={this.state.storyList} date={this.state.date} />
       </div>
     );
   }
