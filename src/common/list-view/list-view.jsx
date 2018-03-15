@@ -1,29 +1,18 @@
 import React, {Component} from 'react';
 import './list-view.styl';
-import PropTypes from 'prop-types';
 
 class ListView extends Component {
 
-  // 定义默认值
-  static defaultProps = {
-    viewList: []
-  };
-
-  // 定义类型
-  static propTypes = {
-    viewList: PropTypes.array.isRequired
-  };
-
   emit(viewItem, history) {
-    this.props.emit(viewItem, history);
+    this.props.listViewData.emit(viewItem, history);
   }
 
   render() {
     let dateTitle;
-    if (this.props.date) {
-      let year = this.props.date.substr(0, 4);
-      let month = this.props.date.substr(4, 2);
-      let day = this.props.date.substr(6, 2);
+    if (this.props.listViewData.date) {
+      let year = this.props.listViewData.date.substr(0, 4);
+      let month = this.props.listViewData.date.substr(4, 2);
+      let day = this.props.listViewData.date.substr(6, 2);
       let date = year + '-' + month + '-' + day + ' 00:00:00';
       let latestDate = new Date(date).getTime();
       let now = new Date().getTime();
@@ -37,10 +26,10 @@ class ListView extends Component {
     }
 
     let view;
-    if (this.props.viewList) {
-      view = this.props.viewList.map((viewItem) => {
+    if (this.props.listViewData.viewList) {
+      view = this.props.listViewData.viewList.map((viewItem) => {
         return (
-          <div className="list-item" key={viewItem.id} onClick={() => this.emit(viewItem, this.props.history)}>
+          <div className="list-item" key={viewItem.id} onClick={() => this.emit(viewItem, this.props.listViewData.history)}>
             <em>{viewItem.title}</em>
             <img src={viewItem.images[0]} alt="" />
           </div>

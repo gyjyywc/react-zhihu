@@ -6,22 +6,36 @@ import ListView from 'common/list-view/list-view';
 import './index.styl'
 
 class Index extends Component {
-  // banner 上的热门
-
   state = {
-    topList: [],
-    storyList: [],
-    date: '',
-    newsId: 0
+    newsId: 0,
+    bannerData: {
+      topList: [],
+      history: {},
+      emit: {}
+    },
+    listViewData: {
+      viewList: [],
+      date: 0,
+      history: {},
+      emit: {}
+    },
   };
 
   componentWillMount() {
     getLatest()
       .then((response) => {
         this.setState({
-          topList: response.top_stories,
-          storyList: response.stories,
-          date: response.date
+          bannerData: {
+            topList: response.top_stories,
+            history: this.props.history,
+            emit: Index.handleEmit
+          },
+          listViewData: {
+            viewList: response.stories,
+            date: response.date,
+            history: this.props.history,
+            emit: Index.handleEmit
+          }
         });
       })
       .catch((error) => {
@@ -39,17 +53,10 @@ class Index extends Component {
         <MHeader title='首页' />
         <div className="slider-wrapper">
           <div className="slider-content">
-            <Banner
-              topList={this.state.topList}
-              history={this.props.history}
-              emit={Index.handleEmit} />
+            <Banner bannerData={this.state.bannerData} />
           </div>
         </div>
-        <ListView
-          viewList={this.state.storyList}
-          date={this.state.date}
-          emit={Index.handleEmit}
-          history={this.props.history}/>
+        <ListView listViewData={this.state.listViewData} />
       </div>
     );
   }
