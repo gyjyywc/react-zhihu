@@ -3,6 +3,7 @@ import BScroll from 'better-scroll';
 import {windowWith, addClass} from 'assets/js/dom';
 import PropTypes from 'prop-types';
 import './banner.styl';
+import Index from "components/index/index";
 
 class Banner extends Component {
 
@@ -74,8 +75,9 @@ class Banner extends Component {
     if (this.props.loop) {
       width += sliderWidth * 2;
     }
-    document.getElementById('sliderGroup').style.width = width + 'px';
-    document.getElementById('sliderGroup').style.height = height + 'px';
+    let sliderGroup = document.getElementById('sliderGroup');
+    sliderGroup.style.width = width + 'px';
+    sliderGroup.style.height = height + 'px';
   }
 
   initScroll() {
@@ -130,15 +132,15 @@ class Banner extends Component {
   }
 
   // 只做事件分发，不做业务处理。解耦
-  emit(topStory, history) {
-    this.props.bannerData.emit(topStory, history);
+  emit(topStory) {
+    Index.handleEmit(topStory, Index.history);
   }
 
   render() {
     let topStoryPic = this.props.bannerData.topList.map((topStory) => {
       return (
         <div key={topStory.id}>
-          <a onClick={() => this.emit(topStory, this.props.bannerData.history)}>
+          <a onClick={() => this.emit(topStory)}>
             <img src={topStory.image} alt="" />
             <em>{topStory.title}</em>
           </a>

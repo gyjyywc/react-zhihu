@@ -9,32 +9,28 @@ class Index extends Component {
   state = {
     newsId: 0,
     bannerData: {
-      topList: [],
-      history: {},
-      emit: {}
+      topList: []
     },
     listViewData: {
       viewList: [],
-      date: 0,
-      history: {},
-      emit: {}
+      date: 0
     },
   };
 
+  // 设置静态 history 方便子组件传回来
+  static history;
+
   componentWillMount() {
+    Index.history = this.props.history;
     getLatest()
       .then((response) => {
         this.setState({
           bannerData: {
-            topList: response.top_stories,
-            history: this.props.history,
-            emit: Index.handleEmit
+            topList: response.top_stories
           },
           listViewData: {
             viewList: response.stories,
-            date: response.date,
-            history: this.props.history,
-            emit: Index.handleEmit
+            date: response.date
           }
         });
       })
