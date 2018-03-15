@@ -14,6 +14,9 @@ class ListView extends Component {
     viewList: PropTypes.array.isRequired
   };
 
+  emit(viewItem, history) {
+    this.props.emit(viewItem, history);
+  }
 
   render() {
     let dateTitle;
@@ -37,7 +40,7 @@ class ListView extends Component {
     if (this.props.viewList) {
       view = this.props.viewList.map((viewItem) => {
         return (
-          <div className="list-item" key={viewItem.id}>
+          <div className="list-item" key={viewItem.id} onClick={() => this.emit(viewItem, this.props.history)}>
             <em>{viewItem.title}</em>
             <img src={viewItem.images[0]} alt="" />
           </div>
