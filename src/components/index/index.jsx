@@ -3,6 +3,7 @@ import {getLatest} from 'api/index';
 import MHeader from 'common/m-header/m-header';
 import Banner from 'common/banner/banner';
 import ListView from 'common/list-view/list-view';
+import Scroll from 'common/scroll/scroll';
 import './index.styl'
 
 class Index extends Component {
@@ -47,12 +48,14 @@ class Index extends Component {
     return (
       <div>
         <MHeader title='首页' />
-        <div className="slider-wrapper">
-          <div className="slider-content">
-            <Banner bannerData={this.state.bannerData} />
+        <Scroll data={this.state.listViewData.viewList}>
+          <div className="slider-wrapper">
+            <div className="slider-content">
+              <Banner bannerData={this.state.bannerData} />
+            </div>
           </div>
-        </div>
-        <ListView listViewData={this.state.listViewData} />
+          <ListView listViewData={this.state.listViewData} />
+        </Scroll>
       </div>
     );
   }
