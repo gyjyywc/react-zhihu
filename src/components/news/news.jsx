@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {getNews} from 'api/index';
 import './news.styl';
 import NewsHeader from 'common/news-header/news-header';
+import Scroll from 'common/scroll/scroll';
 
 class News extends Component {
 
@@ -69,7 +70,9 @@ class News extends Component {
       <div>
         {css}
         <NewsHeader history={this.props.history} emit={News.handleEmit} />
-        <div dangerouslySetInnerHTML={{__html: this.state.data.body}} />
+        <Scroll>
+          <div dangerouslySetInnerHTML={{__html: this.state.data.body}} />
+        </Scroll>
       </div>
     );
   }

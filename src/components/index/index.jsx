@@ -16,6 +16,9 @@ class Index extends Component {
       viewList: [],
       date: 0
     },
+    BScroll: {
+      scrollToEnd: {}
+    }
   };
 
   // 设置静态 history 方便子组件传回来
@@ -37,18 +40,27 @@ class Index extends Component {
       })
       .catch((error) => {
         console.error('内部错误，错误原因: ' + error);
-      })
+      });
+    this.setState({
+      BScroll: {
+        scrollToEnd: Index.scrollToEnd
+      }
+    });
   }
 
   static handleEmit(newsItem, history) {
     history.push('/news/' + newsItem.id);
   }
 
+  static scrollToEnd() {
+    console.log(11)
+  }
+
   render() {
     return (
       <div>
         <MHeader title='首页' />
-        <Scroll data={this.state.listViewData.viewList}>
+        <Scroll data={this.state.listViewData.viewList} BScroll={this.state.BScroll}>
           <div className="slider-wrapper">
             <div className="slider-content">
               <Banner bannerData={this.state.bannerData} />

@@ -4,25 +4,29 @@ import BScroll from 'better-scroll';
 class Scroll extends Component {
 
   static defaultProps = {
-    probeType: 1,
-    click: true,
-    data: [],
-    refreshDelay: 300,
-    listenScroll: false,
-    pullup: false,
-    beforeScroll: false
+    scrollConfig: {
+      probeType: 1,
+      click: true,
+      data: [],
+      refreshDelay: 300,
+    },
+    scrollEvent: {
+      listenScroll: false,
+      pullup: true,
+      beforeScroll: false
+    }
   };
 
   componentDidMount() {
     setTimeout(() => {
       this.initScroll();
-    }, this.props.refreshDelay);
+    }, this.props.BScroll.refreshDelay);
   }
 
   shouldComponentUpdate() {
     setTimeout(() => {
       this.refresh();
-    }, this.props.refreshDelay);
+    }, this.props.BScroll.refreshDelay);
     return true;
   }
 
@@ -32,24 +36,25 @@ class Scroll extends Component {
       return;
     }
     this.scroll = new BScroll(wrapper, {
-      probeType: this.props.probeType,
-      click: this.props.click,
+      probeType: this.props.BScroll.probeType,
+      click: this.props.BScroll.click,
     });
-    if (this.props.listenScroll) {
+    if (this.props.BScroll.listenScroll) {
       this.scroll.on('scroll', (pos) => {
-        this.props.emitScroll(pos);
+        this.props.BScroll.scroll(pos);
       });
     }
-    if (this.props.pullup) {
+      console.log(this.props.BScroll)
+    if (this.props.BScroll.pullup) {
       this.scroll.on('scrollEnd', () => {
         if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
-          this.props.emitScrollToEnd();
+          this.props.BScroll.scrollToEnd();
         }
       });
     }
-    if (this.props.beforeScroll) {
+    if (this.props.BScroll.beforeScroll) {
       this.scroll.on('beforeScrollStart', () => {
-        this.props.emitBeforeScroll();
+        this.props.BScroll.beforeScroll();
       });
     }
   }
