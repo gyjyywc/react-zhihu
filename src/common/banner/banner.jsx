@@ -3,7 +3,6 @@ import BScroll from 'better-scroll';
 import {windowWith, addClass} from 'assets/js/dom';
 import PropTypes from 'prop-types';
 import './banner.styl';
-import Index from "components/index/index";
 
 class Banner extends Component {
 
@@ -132,15 +131,15 @@ class Banner extends Component {
   }
 
   // 只做事件分发，不做业务处理。解耦
-  emit(topStory) {
-    Index.handleEmit(topStory, Index.history);
+  emitClick(topStory) {
+    this.props.bannerData.handleClick(topStory);
   }
 
   render() {
     let topStoryPic = this.props.bannerData.topList.map((topStory) => {
       return (
         <div key={topStory.id}>
-          <a onClick={() => this.emit(topStory)}>
+          <a onClick={() => this.emitClick(topStory)}>
             <img src={topStory.image} alt="" />
             <em>{topStory.title}</em>
           </a>

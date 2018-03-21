@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import './list-view.styl';
-import Index from "../../components/index";
 
 class ListView extends Component {
 
-  emit(viewItem) {
-    Index.handleEmit(viewItem, Index.history);
+  emitClick(viewItem) {
+    this.props.listViewData.handleClick(viewItem);
   }
 
   render() {
@@ -30,7 +29,7 @@ class ListView extends Component {
     if (this.props.listViewData.viewList) {
       view = this.props.listViewData.viewList.map((viewItem) => {
         return (
-          <div className="list-item" key={viewItem.id} onClick={() => this.emit(viewItem)}>
+          <div className="list-item" key={viewItem.id} onClick={() => this.emitClick(viewItem)}>
             <em>{viewItem.title}</em>
             <img src={viewItem.images[0]} alt="" />
           </div>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getLatest} from 'api/index';
+import {getLatest, getPreviousNews} from 'api/index';
 import MHeader from 'common/m-header/m-header';
 import Banner from 'common/banner/banner';
 import ListView from 'common/list-view/list-view';
@@ -10,57 +10,76 @@ class Index extends Component {
   state = {
     newsId: 0,
     bannerData: {
-      topList: []
+      topList: [],
+      handleClick: {}
     },
     listViewData: {
       viewList: [],
-      date: 0
+      date: 0,
+      handleClick: {}
     },
-    BScroll: {
-      scrollToEnd: {}
-    }
+    scrollEvent: {
+      scroll: {}
+    },
+    nowDate: 0
   };
 
-  // 设置静态 history 方便子组件传回来
-  static history;
-
   componentWillMount() {
-    Index.history = this.props.history;
     getLatest()
       .then((response) => {
         this.setState({
           bannerData: {
-            topList: response.top_stories
+            topList: response.top_stories,
+            handleClick: this.handleEmit.bind(this)
           },
           listViewData: {
             viewList: response.stories,
-            date: response.date
-          }
+            date: response.date,
+            handleClick: this.handleEmit.bind(this)
+          },
+          nowDate: response.date
         });
       })
       .catch((error) => {
         console.error('内部错误，错误原因: ' + error);
       });
+
     this.setState({
-      BScroll: {
-        scrollToEnd: Index.scrollToEnd
+      scrollEvent: {
+        // 不 bind this 就无法再函数里使用指向 ProxyComponent 的 this 关键字
+        scroll: this.scroll.bind(this)
       }
     });
   }
 
-  static handleEmit(newsItem, history) {
-    history.push('/news/' + newsItem.id);
+  handleEmit(newsItem) {
+    this.props.history.push('/news/' + newsItem.id);
   }
 
-  static scrollToEnd() {
-    console.log(11)
+  scroll(pos, scroll) {
+    if (pos.y <= scroll.maxScrollY - 50) {
+      getPreviousNews(this.state.nowDate)
+        .then((response) => {
+          // 简单 alert 一下好了，一般没人能坚持翻到 2013 年吧。
+          if (response.date === '20130520') {
+            return alert('没有更多消息了');
+          } else {
+            this.setState({
+              nowDate: response.date
+            });
+          }
+        })
+        .catch((error) => {
+          console.error('内部错误，错误原因: ' + error);
+        });
+    }
   }
 
   render() {
     return (
       <div>
         <MHeader title='首页' />
-        <Scroll data={this.state.listViewData.viewList} BScroll={this.state.BScroll}>
+        <Scroll data={this.state.listViewData.viewList} scrollEvent={this.state.scrollEvent}>
           <div className="slider-wrapper">
             <div className="slider-content">
               <Banner bannerData={this.state.bannerData} />

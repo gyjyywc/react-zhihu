@@ -3,14 +3,14 @@ import './news-header.styl';
 
 class NewsHeader extends Component {
 
-  back(history) {
-    this.props.emit(history);
+  back() {
+    this.props.handleClick();
   }
 
   render() {
     return (
       <div className="header">
-        <i className="icon-next" onClick={() => this.back(this.props.history)} />
+        <i className="icon-next" onClick={() => this.back()} />
         <i className="icon-share" />
         <i className="icon-favorite" />
         <span className="comment">

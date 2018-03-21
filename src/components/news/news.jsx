@@ -51,9 +51,8 @@ class News extends Component {
     wrapper.appendChild(layer);
   }
 
-  // 从 this.props.history 取不到，得从子组件传过来
-  static handleEmit(history) {
-    history.push('/index');
+  static handleEmit() {
+    this.props.history.push('/index');
   }
 
   render() {
@@ -69,7 +68,7 @@ class News extends Component {
     return (
       <div>
         {css}
-        <NewsHeader history={this.props.history} emit={News.handleEmit} />
+        <NewsHeader history={this.props.history} handleClick={News.handleEmit.bind(this)} />
         <Scroll>
           <div dangerouslySetInnerHTML={{__html: this.state.data.body}} />
         </Scroll>
