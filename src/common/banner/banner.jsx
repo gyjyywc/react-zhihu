@@ -13,7 +13,9 @@ class Banner extends Component {
 
   // 定义默认值
   static defaultProps = {
-    topList: [],
+    bannerData: {
+      topList: []
+    },
     loop: true,
     autoPlay: true,
     interval: 4000,
@@ -25,7 +27,7 @@ class Banner extends Component {
 
   // 定义类型
   static propTypes = {
-    topList: PropTypes.array.isRequired,
+    bannerData: PropTypes.object.isRequired,
     loop: PropTypes.bool,
     autoPlay: PropTypes.bool,
     interval: PropTypes.number,
@@ -37,13 +39,19 @@ class Banner extends Component {
     this.update();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.bannerData.topList.length === nextProps.bannerData.topList.length) {
+      this.update();
+    }
+  }
+
   update() {
     if (this.scroll) {
       this.scroll.destroy();
     }
     setTimeout(() => {
       this.init();
-    }, 500);
+    }, 300);
   }
 
   init() {
@@ -61,22 +69,25 @@ class Banner extends Component {
 
   setSliderWidthAndHeight() {
     this.children = document.getElementById('sliderGroup').children;
-    let width = 0;
-    let height = Math.round(windowWith * this.PERCENT);
-    let sliderWidth = document.getElementById('slider').clientWidth;
-    for (let i = 0; i < this.children.length; i++) {
-      let child = this.children[i];
-      addClass(child, 'slider-item');
-      child.style.width = sliderWidth + 'px';
-      child.style.height = height + 'px';
-      width += sliderWidth;
+    // 数据加载完才显示
+    if (this.props.bannerData.topList.length) {
+      let width = 0;
+      let height = Math.round(windowWith * this.PERCENT);
+      let sliderWidth = document.getElementById('slider').clientWidth;
+      for (let i = 0; i < this.children.length; i++) {
+        let child = this.children[i];
+        addClass(child, 'slider-item');
+        child.style.width = sliderWidth + 'px';
+        child.style.height = height + 'px';
+        width += sliderWidth;
+      }
+      if (this.props.loop) {
+        width += sliderWidth * 2;
+      }
+      let sliderGroup = document.getElementById('sliderGroup');
+      sliderGroup.style.width = width + 'px';
+      sliderGroup.style.height = height + 'px';
     }
-    if (this.props.loop) {
-      width += sliderWidth * 2;
-    }
-    let sliderGroup = document.getElementById('sliderGroup');
-    sliderGroup.style.width = width + 'px';
-    sliderGroup.style.height = height + 'px';
   }
 
   initScroll() {
@@ -136,10 +147,15 @@ class Banner extends Component {
   }
 
   render() {
+    // 先隐藏，然后通过 setSliderWidthAndHeight 添加 slider-item 类名后显示，保证低网速下体验
+    let style = {
+      display: 'none'
+    };
+
     let topStoryPic = this.props.bannerData.topList.map((topStory) => {
       return (
         <div key={topStory.id}>
-          <a onClick={() => this.emitClick(topStory)}>
+          <a style={style} onClick={() => this.emitClick(topStory)}>
             <img src={topStory.image} alt="" />
             <em>{topStory.title}</em>
           </a>

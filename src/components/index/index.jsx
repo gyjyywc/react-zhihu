@@ -15,7 +15,7 @@ class Index extends Component {
     },
     listViewData: {
       viewList: [],
-      date: 0,
+      date: [],
       handleClick: {}
     },
     scrollEvent: {
@@ -33,8 +33,8 @@ class Index extends Component {
             handleClick: this.handleEmit.bind(this)
           },
           listViewData: {
-            viewList: response.stories,
-            date: response.date,
+            // 数据封装成 result 风格
+            viewList: [{date: response.date}].concat(response.stories),
             handleClick: this.handleEmit.bind(this)
           },
           nowDate: response.date
@@ -57,7 +57,7 @@ class Index extends Component {
   }
 
   scroll(pos, scroll) {
-    if (pos.y <= scroll.maxScrollY - 50) {
+    if (pos.y <= scroll.maxScrollY - 20) {
       getPreviousNews(this.state.nowDate)
         .then((response) => {
           // 简单 alert 一下好了，一般没人能坚持翻到 2013 年吧。
@@ -65,7 +65,11 @@ class Index extends Component {
             return alert('没有更多消息了');
           } else {
             this.setState({
-              nowDate: response.date
+              nowDate: response.date,
+              listViewData: {
+                // 数据封装成 result 风格
+                viewList: this.state.listViewData.viewList.concat([{date: response.date}].concat(response.stories)),
+              }
             });
           }
         })

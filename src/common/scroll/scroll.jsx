@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import BScroll from 'better-scroll';
+import PropTypes from 'prop-types';
 
 class Scroll extends Component {
 
@@ -11,8 +12,13 @@ class Scroll extends Component {
     scrollEvent: {}
   };
 
-  state = {
-    isBottom: false
+  // 定义类型
+  static propTypes = {
+    probeType: PropTypes.number,
+    click: PropTypes.bool,
+    data: PropTypes.array,
+    refreshDelay: PropTypes.number,
+    scrollEvent: PropTypes.object,
   };
 
   componentDidMount() {
