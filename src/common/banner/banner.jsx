@@ -40,7 +40,7 @@ class Banner extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.bannerData.topList.length === nextProps.bannerData.topList.length) {
+    if (this.props.bannerData.topList.length !== nextProps.bannerData.topList.length) {
       this.update();
     }
   }
