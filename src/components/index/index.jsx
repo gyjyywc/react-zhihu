@@ -83,7 +83,7 @@ class Index extends Component {
     return (
       <div>
         <MHeader title='首页' />
-        <Scroll data={this.state.listViewData.viewList} scrollEvent={this.state.scrollEvent}>
+        <Scroll scrollEvent={this.state.scrollEvent}>
           <div className="slider-wrapper">
             <div className="slider-content">
               <Banner bannerData={this.state.bannerData} />

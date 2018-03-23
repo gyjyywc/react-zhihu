@@ -7,7 +7,7 @@ class Scroll extends Component {
   static defaultProps = {
     probeType: 1,
     click: true,
-    data: [],
+    bounceTime: 700,
     refreshDelay: 300,
     scrollEvent: {}
   };
@@ -42,6 +42,7 @@ class Scroll extends Component {
     this.scroll = new BScroll(wrapper, {
       probeType: this.props.probeType,
       click: this.props.click,
+      bounceTime: this.props.bounceTime
     });
     if (this.props.scrollEvent.scroll) {
       this.scroll.on('scroll', (pos) => {

@@ -35,10 +35,7 @@ class Banner extends Component {
     speed: PropTypes.number
   };
 
-  componentDidMount() {
-    this.update();
-  }
-
+  // 慢网速下也能正确渲染banner
   componentWillReceiveProps(nextProps) {
     if (this.props.bannerData.topList.length !== nextProps.bannerData.topList.length) {
       this.update();
