@@ -15,13 +15,10 @@ class MHeader extends Component {
     return (
       <div className="header">
         <span className="left-content">
-          <i className="icon-nav"/>
+          <i className="icon-nav" />
           <em>{this.props.title}</em>
         </span>
-        <span className="right-content">
-          <i className="icon-notice"/>
-          <i className="icon-setting"/>
-        </span>
+        <i className="icon-setting" />
       </div>
     );
   }

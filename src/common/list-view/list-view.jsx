@@ -54,6 +54,7 @@ class ListView extends Component {
       <div className="list-wrapper">
         {views}
       </div>
+
     );
   }
 }
