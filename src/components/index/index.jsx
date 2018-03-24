@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
-import {getLatest, getPreviousNews} from 'api/index';
 import MHeader from 'common/m-header/m-header';
 import Banner from 'common/banner/banner';
 import ListView from 'common/list-view/list-view';
 import Scroll from 'common/scroll/scroll';
+import Loading from 'common/loading/loading'
+import React, {Component} from 'react';
+import {getLatest, getPreviousNews} from 'api/index';
 import './index.styl'
 
 class Index extends Component {
@@ -19,7 +20,7 @@ class Index extends Component {
       handleClick: {}
     },
     scrollEvent: {
-      scroll: {}
+      scrollToEnd: {}
     },
     nowDate: 0
   };
@@ -39,6 +40,8 @@ class Index extends Component {
           },
           nowDate: response.date
         });
+        Loading.hideLoading('loadingWrapper');
+        document.getElementById('listLoading').style.display = 'block';
       })
       .catch((error) => {
         console.error('内部错误，错误原因: ' + error);
@@ -47,7 +50,7 @@ class Index extends Component {
     this.setState({
       scrollEvent: {
         // 不 bind this 就无法再函数里使用指向 ProxyComponent 的 this 关键字
-        scroll: this.scroll.bind(this)
+        scrollToEnd: this.scrollToEnd.bind(this)
       }
     });
   }
@@ -56,27 +59,26 @@ class Index extends Component {
     this.props.history.push('/news/' + newsItem.id);
   }
 
-  scroll(pos, scroll) {
-    if (pos.y <= scroll.maxScrollY - 20) {
-      getPreviousNews(this.state.nowDate)
-        .then((response) => {
-          // 简单 alert 一下好了，一般没人能坚持翻到 2013 年吧。
-          if (response.date === '20130520') {
-            return alert('没有更多消息了');
-          } else {
-            this.setState({
-              nowDate: response.date,
-              listViewData: {
-                // 数据封装成 result 风格
-                viewList: this.state.listViewData.viewList.concat([{date: response.date}].concat(response.stories)),
-              }
-            });
-          }
-        })
-        .catch((error) => {
-          console.error('内部错误，错误原因: ' + error);
-        });
-    }
+  scrollToEnd() {
+    getPreviousNews(this.state.nowDate)
+      .then((response) => {
+        // 简单 alert 一下好了，一般没人能坚持翻到 2013 年吧。
+        if (response.date === '20130520') {
+          return alert('没有更多消息了');
+        } else {
+          this.setState({
+            nowDate: response.date,
+            listViewData: {
+              // 数据封装成 result 风格
+              viewList: this.state.listViewData.viewList.concat([{date: response.date}].concat(response.stories)),
+              handleClick: this.handleEmit.bind(this),
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('内部错误，错误原因: ' + error);
+      });
   }
 
   render() {
@@ -90,7 +92,13 @@ class Index extends Component {
             </div>
           </div>
           <ListView listViewData={this.state.listViewData} />
+          <div className="list-loading" id="listLoading">
+            <Loading title="" />
+          </div>
         </Scroll>
+        <div className="loading-wrapper" id="loadingWrapper">
+          <Loading />
+        </div>
       </div>
     );
   }

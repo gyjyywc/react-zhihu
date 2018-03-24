@@ -1,13 +1,15 @@
+import NewsHeader from 'common/news-header/news-header';
+import Scroll from 'common/scroll/scroll';
+import Loading from 'common/loading/loading'
 import React, {Component} from 'react';
 import {getNews} from 'api/index';
 import './news.styl';
-import NewsHeader from 'common/news-header/news-header';
-import Scroll from 'common/scroll/scroll';
 
 class News extends Component {
 
   state = {
-    data: {}
+    data: {},
+    interval: 1
   };
 
   componentWillMount() {
@@ -16,17 +18,18 @@ class News extends Component {
         this.setState({
           data: response
         });
+        Loading.hideLoading('loadingWrapper');
       })
       .catch((error) => {
         console.error('内部错误，错误原因: ' + error);
       })
   }
 
-  componentDidMount() {
-    // Todo 网络慢的时候会出现模板报错，也就是 className 为 ‘img-place-holder’ 的元素还没被渲染出来。需要优化
-    setTimeout(() => {
+  // 保证拥有数据后正确创建头部
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.data !== prevState.data) {
       this.createHeader();
-    }, 1000)
+    }
   }
 
   createHeader() {
@@ -72,6 +75,9 @@ class News extends Component {
         <Scroll>
           <div dangerouslySetInnerHTML={{__html: this.state.data.body}} />
         </Scroll>
+        <div className="loading-wrapper" id="loadingWrapper">
+          <Loading />
+        </div>
       </div>
     );
   }

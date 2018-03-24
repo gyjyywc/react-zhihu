@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
 import BScroll from 'better-scroll';
+import React, {Component} from 'react';
 import {windowWith, addClass} from 'assets/js/dom';
 import PropTypes from 'prop-types';
 import './banner.styl';

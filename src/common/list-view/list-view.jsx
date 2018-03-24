@@ -30,11 +30,16 @@ class ListView extends Component {
       views = this.props.listViewData.viewList.map((viewItem, index) => {
         if (!viewItem.id) {
           view = (
-            <p className="list-date" key={index}>{ListView.formatStringDate(viewItem.date)}</p>
+            <p className="list-date"
+               key={index}>
+              {ListView.formatStringDate(viewItem.date)}
+            </p>
           );
         } else {
           view = (
-            <div className="list-item" key={viewItem.id} onClick={() => this.emitClick(viewItem)}>
+            <div className="list-item"
+                 key={viewItem.id + '-' + index}
+                 onClick={() => this.emitClick(viewItem)}>
               <em>{viewItem.title}</em>
               <img src={viewItem.images[0]} alt="" />
             </div>

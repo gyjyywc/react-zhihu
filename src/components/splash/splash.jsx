@@ -1,6 +1,6 @@
-import './splash.styl';
 import React, {Component} from 'react';
 import {prefixStyle} from 'assets/js/dom';
+import './splash.styl';
 
 class Splash extends Component {
 

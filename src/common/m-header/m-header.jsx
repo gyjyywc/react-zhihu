@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import './m-header.styl';
 import PropTypes from 'prop-types';
+import './m-header.styl';
 
 class MHeader extends Component {
   static defaultProps = {
