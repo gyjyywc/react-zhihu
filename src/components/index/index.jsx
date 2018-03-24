@@ -3,8 +3,9 @@ import Banner from 'common/banner/banner';
 import ListView from 'common/list-view/list-view';
 import Scroll from 'common/scroll/scroll';
 import Loading from 'common/loading/loading'
+import SideBar from 'common/side-bar/side-bar'
 import React, {Component} from 'react';
-import {getLatest, getPreviousNews} from 'api/index';
+import {getLatest, getPreviousNews, getThemes} from 'api/index';
 import './index.styl'
 
 class Index extends Component {
@@ -22,7 +23,8 @@ class Index extends Component {
     scrollEvent: {
       scrollToEnd: {}
     },
-    nowDate: 0
+    nowDate: 0,
+    themeData: [],
   };
 
   componentWillMount() {
@@ -42,6 +44,16 @@ class Index extends Component {
         });
         Loading.hideLoading('loadingWrapper');
         document.getElementById('listLoading').style.display = 'block';
+      })
+      .catch((error) => {
+        console.error('内部错误，错误原因: ' + error);
+      });
+
+    getThemes()
+      .then((response) => {
+        this.setState({
+          themeData: response.others
+        });
       })
       .catch((error) => {
         console.error('内部错误，错误原因: ' + error);
@@ -85,7 +97,9 @@ class Index extends Component {
     return (
       <div>
         <MHeader title='首页' />
-        <Scroll scrollEvent={this.state.scrollEvent}>
+        <Scroll className="scroll-wrapper"
+                id="scrollWrapper"
+                scrollEvent={this.state.scrollEvent}>
           <div className="slider-wrapper">
             <div className="slider-content">
               <Banner bannerData={this.state.bannerData} />
@@ -98,6 +112,9 @@ class Index extends Component {
         </Scroll>
         <div className="loading-wrapper" id="loadingWrapper">
           <Loading />
+        </div>
+        <div className="sidebar-wrapper">
+          <SideBar themeData={this.state.themeData} />
         </div>
       </div>
     );

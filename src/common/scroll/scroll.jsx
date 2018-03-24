@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 class Scroll extends Component {
 
   static defaultProps = {
+    className: '',
+    id: '',
     probeType: 1,
     click: true,
     bounceTime: 700,
@@ -14,6 +16,8 @@ class Scroll extends Component {
 
   // 定义类型
   static propTypes = {
+    id: PropTypes.string.isRequired,
+    className: PropTypes.string,
     probeType: PropTypes.number,
     click: PropTypes.bool,
     data: PropTypes.array,
@@ -35,7 +39,7 @@ class Scroll extends Component {
   }
 
   initScroll() {
-    let wrapper = document.getElementById('scrollWrapper');
+    let wrapper = document.getElementById(this.props.id);
     if (!wrapper) {
       return;
     }
@@ -85,7 +89,7 @@ class Scroll extends Component {
 
   render() {
     return (
-      <div className="scroll-wrapper" id="scrollWrapper">
+      <div className={this.props.className} id={this.props.id}>
         <div>{this.props.children}</div>
       </div>
     );
