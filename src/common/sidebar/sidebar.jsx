@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Scroll from 'common/scroll/scroll';
-import './side-bar.styl'
+import './sidebar.styl'
 
-class SideBar
+class Sidebar
   extends Component {
 
   static defaultProps = {
@@ -14,6 +14,11 @@ class SideBar
     themeData: PropTypes.array.isRequired
   };
 
+  static handleClick(e) {
+    // 阻止冒泡到外层 wrapper 点击隐藏
+    e.stopPropagation();
+  }
+
   render() {
     let nameLists;
     if (this.props.themeData) {
@@ -22,7 +27,7 @@ class SideBar
         nameList = (
           <li key={item.id + '-' + index}>
             <em>{item.name}</em>
-            <i className="icon-add"/>
+            <i className="icon-add" />
           </li>
         );
         return nameList;
@@ -30,7 +35,7 @@ class SideBar
     }
 
     return (
-      <div className="side-bar">
+      <div className="sidebar" onClick={(e) => {Sidebar.handleClick(e)}}>
         <div className="side-header">
           <img className="avatar" src={require('./avatar.jpg')} alt="头像" />
           <em className="user-name">未登录</em>
@@ -59,4 +64,4 @@ class SideBar
   }
 }
 
-export default SideBar;
+export default Sidebar;

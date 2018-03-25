@@ -11,11 +11,17 @@ class MHeader extends Component {
     title: PropTypes.string
   };
 
+  emitClick() {
+    this.props.emitClick();
+  }
+
   render() {
     return (
       <div className="header">
         <span className="left-content">
-          <i className="icon-nav" />
+          <i className="icon-nav" onClick={() => {
+            this.emitClick();
+          }} />
           <em>{this.props.title}</em>
         </span>
         <i className="icon-setting" />

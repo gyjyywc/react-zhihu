@@ -3,7 +3,7 @@ import Banner from 'common/banner/banner';
 import ListView from 'common/list-view/list-view';
 import Scroll from 'common/scroll/scroll';
 import Loading from 'common/loading/loading'
-import SideBar from 'common/side-bar/side-bar'
+import Sidebar from 'common/sidebar/sidebar'
 import React, {Component} from 'react';
 import {getLatest, getPreviousNews, getThemes} from 'api/index';
 import './index.styl'
@@ -71,6 +71,14 @@ class Index extends Component {
     this.props.history.push('/news/' + newsItem.id);
   }
 
+  static handleClickOfSidebar() {
+    document.getElementById('sidebarWrapper').style.display = 'none';
+  }
+
+  static handleClickOfMHeader() {
+    document.getElementById('sidebarWrapper').style.display = 'block';
+  }
+
   scrollToEnd() {
     getPreviousNews(this.state.nowDate)
       .then((response) => {
@@ -96,7 +104,7 @@ class Index extends Component {
   render() {
     return (
       <div>
-        <MHeader title='首页' />
+        <MHeader title='首页' emitClick={Index.handleClickOfMHeader} />
         <Scroll className="scroll-wrapper"
                 id="scrollWrapper"
                 scrollEvent={this.state.scrollEvent}>
@@ -113,8 +121,10 @@ class Index extends Component {
         <div className="loading-wrapper" id="loadingWrapper">
           <Loading />
         </div>
-        <div className="sidebar-wrapper">
-          <SideBar themeData={this.state.themeData} />
+        <div className="sidebar-wrapper"
+             id="sidebarWrapper"
+             onClick={Index.handleClickOfSidebar}>
+          <Sidebar themeData={this.state.themeData} />
         </div>
       </div>
     );
