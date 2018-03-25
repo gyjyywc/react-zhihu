@@ -15,9 +15,15 @@ class MHeader extends Component {
     this.props.emitClick();
   }
 
+  emitDoubleClick() {
+    this.props.emitDoubleClick();
+  }
+
   render() {
     return (
-      <div className="header">
+      <div className="header" onDoubleClick={(e) => {
+        this.emitDoubleClick();
+      }}>
         <span className="left-content">
           <i className="icon-nav" onClick={() => {
             this.emitClick();

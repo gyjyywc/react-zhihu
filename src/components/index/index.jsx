@@ -91,6 +91,11 @@ class Index extends Component {
     this.props.history.push('/news/' + newsItem.id);
   }
 
+  handleDoubleClick() {
+    // Scroll.scrollToElement(document.getElementById('sliderWrapper'), 1000);
+    Scroll.scrollToElement(document.getElementsByClassName('list-item')[0], 1000);
+  }
+
   handleClickOfSidebar() {
     this.fadeOutAnimation();
   }
@@ -108,7 +113,7 @@ class Index extends Component {
       // sidebar主体
       let sidebar = sidebarWrapper.children[0];
       sidebar.style[Index.transform] = `translate3d(0,0,0)`;
-    }, 1);
+    }, Index.animationDelay / 10);
   }
 
   fadeOutAnimation() {
@@ -153,21 +158,21 @@ class Index extends Component {
     } else {
       let dates = document.getElementsByClassName('list-date');
       for (let i = 0; i < dates.length; i++) {
-        if (this.startY > this.endY) {
+        if (this.startY > this.endY && this.state.headerTitle !== dates[i].textContent) {
           let rec = dates[i].getBoundingClientRect();
-          if (this.state.headerTitle !== dates[i].textContent && rec.top < Index.scrollDistance) {
+          // 加个大于是为了性能优化，在手机上快速滚动卡的要命(大量 state变化导致重新 render)
+          if (rec.top < Index.scrollDistance && rec.top > (Index.scrollDistance - 20)) {
             this.setState({
               headerTitle: dates[i].textContent
             });
           }
-        } else if (this.startY < this.endY) {
-          if (i !== 0) {
-            let top = dates[i].getBoundingClientRect().top;
-            if (top < (window.innerHeight - 50) && top > 60 && this.state.headerTitle !== dates[i - 1].textContent) {
-              this.setState({
-                headerTitle: dates[i - 1].textContent
-              });
-            }
+        } else if (i !== 0 && this.startY < this.endY && this.state.headerTitle !== dates[i - 1].textContent) {
+          let top = dates[i].getBoundingClientRect().top;
+          // 小于是为了限制最后一个 list-item 一直满足条件而使得满足条件的当前 list-item 不能崭露头角
+          if (top < (window.innerHeight - 50) && top > Index.scrollDistance) {
+            this.setState({
+              headerTitle: dates[i - 1].textContent
+            });
           }
         }
       }
@@ -177,13 +182,15 @@ class Index extends Component {
   render() {
     return (
       <div>
-        <MHeader title={this.state.headerTitle} emitClick={this.handleClickOfMHeader.bind(this)} />
+        <MHeader title={this.state.headerTitle}
+                 emitClick={this.handleClickOfMHeader.bind(this)}
+                 emitDoubleClick={this.handleDoubleClick.bind(this)} />
         <Scroll className="scroll-wrapper"
                 id="scrollWrapper"
                 probeType={Index.listenScrollRealTime}
 
                 scrollEvent={this.state.scrollEvent}>
-          <div className="slider-wrapper">
+          <div className="slider-wrapper" id="sliderWrapper">
             <div className="slider-content">
               <Banner bannerData={this.state.bannerData} />
             </div>

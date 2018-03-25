@@ -25,6 +25,8 @@ class Scroll extends Component {
     scrollEvent: PropTypes.object,
   };
 
+  static scroll;
+
   componentDidMount() {
     setTimeout(() => {
       this.initScroll();
@@ -33,7 +35,7 @@ class Scroll extends Component {
 
   shouldComponentUpdate() {
     setTimeout(() => {
-      this.refresh();
+      Scroll.refresh();
     }, this.props.refreshDelay);
     return true;
   }
@@ -43,53 +45,55 @@ class Scroll extends Component {
     if (!wrapper) {
       return;
     }
-    this.scroll = new BScroll(wrapper, {
+    Scroll.scroll = new BScroll(wrapper, {
       probeType: this.props.probeType,
       click: this.props.click,
       bounceTime: this.props.bounceTime
     });
     if (this.props.scrollEvent.scroll) {
-      this.scroll.on('scroll', (position) => {
+      Scroll.scroll.on('scroll', (position) => {
         this.props.scrollEvent.scroll(position);
       });
     }
     if (this.props.scrollEvent.scrollToEnd) {
-      this.scroll.on('scrollEnd', (position) => {
-        if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
+      Scroll.scroll.on('scrollEnd', (position) => {
+        if (Scroll.scroll.y <= (Scroll.scroll.maxScrollY + 50)) {
           this.props.scrollEvent.scrollToEnd(position);
         }
       });
     }
     if (this.props.scrollEvent.touchEnd) {
-      this.scroll.on('touchEnd', (position) => {
+      Scroll.scroll.on('touchEnd', (position) => {
         this.props.scrollEvent.touchEnd(position);
       });
     }
     if (this.props.scrollEvent.beforeScroll) {
-      this.scroll.on('beforeScrollStart', () => {
+      Scroll.scroll.on('beforeScrollStart', () => {
         this.props.scrollEvent.beforeScroll();
       });
     }
   }
 
-  enable() {
-    this.scroll && this.scroll.enable();
+  static enable() {
+    Scroll.scroll && Scroll.scroll.enable();
   }
 
-  disable() {
-    this.scroll && this.scroll.disable();
+  static disable() {
+    Scroll.scroll && Scroll.scroll.disable();
   }
 
-  refresh() {
-    this.scroll && this.scroll.refresh();
+  static refresh() {
+    Scroll.scroll && Scroll.scroll.refresh();
   }
 
-  scrollTo() {
-    this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments);
+  static scrollTo(x, y) {
+    Scroll.scroll && Scroll.scroll.scrollTo(x, y);
   }
 
-  scrollToElement() {
-    this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments);
+  static scrollToElement(el, time, offsetX, offsetY, easin) {
+    console.log(el)
+    console.log(time)
+    Scroll.scroll && Scroll.scroll.scrollToElement(el, time, offsetX, offsetY, easin);
   }
 
   render() {
