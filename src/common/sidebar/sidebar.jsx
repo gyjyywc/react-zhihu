@@ -35,7 +35,7 @@ class Sidebar
     }
 
     return (
-      <div className="sidebar" onClick={(e) => {Sidebar.handleClick(e)}}>
+      <div className="sidebar" id="sidebar" onClick={(e) => {Sidebar.handleClick(e)}}>
         <div className="side-header">
           <img className="avatar" src={require('./avatar.jpg')} alt="头像" />
           <em className="user-name">未登录</em>

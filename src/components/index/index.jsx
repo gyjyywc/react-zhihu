@@ -6,6 +6,7 @@ import Loading from 'common/loading/loading'
 import Sidebar from 'common/sidebar/sidebar'
 import React, {Component} from 'react';
 import {getLatest, getPreviousNews, getThemes} from 'api/index';
+import {prefixStyle} from "assets/js/dom";
 import './index.styl'
 
 class Index extends Component {
@@ -26,6 +27,9 @@ class Index extends Component {
     nowDate: 0,
     themeData: [],
   };
+
+  transform = prefixStyle('transform');
+  animation = prefixStyle('animation');
 
   componentWillMount() {
     getLatest()
@@ -72,11 +76,35 @@ class Index extends Component {
   }
 
   static handleClickOfSidebar() {
-    document.getElementById('sidebarWrapper').style.display = 'none';
+    Index.fadeOutAnimation();
   }
 
   static handleClickOfMHeader() {
-    document.getElementById('sidebarWrapper').style.display = 'block';
+    Index.fadeInAnimation();
+  }
+
+  static fadeInAnimation() {
+    let sidebarWrapper = document.getElementById('sidebarWrapper');
+    sidebarWrapper.style.display = `block`;
+    // 保证动画效果
+    setTimeout(() => {
+      sidebarWrapper.style.background = `rgba(0,0,0,0.3)`;
+      // sidebar主体
+      let sidebar = sidebarWrapper.children[0];
+      sidebar.style[this.transform] = `translate3d(0,0,0)`;
+    }, 1);
+  }
+
+  static fadeOutAnimation() {
+    let sidebarWrapper = document.getElementById('sidebarWrapper');
+    sidebarWrapper.style.background = `transparent`;
+    // sidebar主体
+    let sidebar = sidebarWrapper.children[0];
+    sidebar.style[this.transform] = `translate3d(-100%,0,0)`;
+    // 保证动画效果，延迟时间与动画时一致
+    setTimeout(() => {
+      sidebarWrapper.style.display = `none`;
+    }, 300);
   }
 
   scrollToEnd() {
@@ -104,7 +132,7 @@ class Index extends Component {
   render() {
     return (
       <div>
-        <MHeader title='首页' emitClick={Index.handleClickOfMHeader} />
+        <MHeader title='首页' emitClick={Index.handleClickOfMHeader.bind(this)} />
         <Scroll className="scroll-wrapper"
                 id="scrollWrapper"
                 scrollEvent={this.state.scrollEvent}>
@@ -123,7 +151,7 @@ class Index extends Component {
         </div>
         <div className="sidebar-wrapper"
              id="sidebarWrapper"
-             onClick={Index.handleClickOfSidebar}>
+             onClick={Index.handleClickOfSidebar.bind(this)}>
           <Sidebar themeData={this.state.themeData} />
         </div>
       </div>
