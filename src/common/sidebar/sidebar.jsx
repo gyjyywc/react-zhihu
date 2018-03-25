@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import Scroll from 'common/scroll/scroll';
 import './sidebar.styl'
 
-class Sidebar
-  extends Component {
+class Sidebar extends Component {
 
   static defaultProps = {
     themeData: []
@@ -14,7 +13,7 @@ class Sidebar
     themeData: PropTypes.array.isRequired
   };
 
-  static handleClick(e) {
+  handleClick(e) {
     // 阻止冒泡到外层 wrapper 点击隐藏
     e.stopPropagation();
   }
@@ -35,7 +34,9 @@ class Sidebar
     }
 
     return (
-      <div className="sidebar" id="sidebar" onClick={(e) => {Sidebar.handleClick(e)}}>
+      <div className="sidebar" id="sidebar" onClick={(e) => {
+        this.handleClick(e)
+      }}>
         <div className="side-header">
           <img className="avatar" src={require('./avatar.jpg')} alt="头像" />
           <em className="user-name">未登录</em>

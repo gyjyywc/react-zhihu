@@ -7,7 +7,7 @@ class Scroll extends Component {
   static defaultProps = {
     className: '',
     id: '',
-    probeType: 1,
+    probeType: 2,
     click: true,
     bounceTime: 700,
     refreshDelay: 300,
@@ -49,15 +49,20 @@ class Scroll extends Component {
       bounceTime: this.props.bounceTime
     });
     if (this.props.scrollEvent.scroll) {
-      this.scroll.on('scroll', (pos) => {
-        this.props.scrollEvent.scroll(pos, this.scroll);
+      this.scroll.on('scroll', (position) => {
+        this.props.scrollEvent.scroll(position);
       });
     }
     if (this.props.scrollEvent.scrollToEnd) {
-      this.scroll.on('scrollEnd', () => {
+      this.scroll.on('scrollEnd', (position) => {
         if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
-          this.props.scrollEvent.scrollToEnd();
+          this.props.scrollEvent.scrollToEnd(position);
         }
+      });
+    }
+    if (this.props.scrollEvent.touchEnd) {
+      this.scroll.on('touchEnd', (position) => {
+        this.props.scrollEvent.touchEnd(position);
       });
     }
     if (this.props.scrollEvent.beforeScroll) {

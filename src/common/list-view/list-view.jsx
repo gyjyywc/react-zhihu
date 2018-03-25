@@ -7,7 +7,7 @@ class ListView extends Component {
     this.props.listViewData.handleClick(viewItem);
   }
 
-  static formatStringDate(item) {
+  formatStringDate(item) {
     let year = item.substr(0, 4);
     let month = item.substr(4, 2);
     let day = item.substr(6, 2);
@@ -32,7 +32,7 @@ class ListView extends Component {
           view = (
             <p className="list-date"
                key={index}>
-              {ListView.formatStringDate(viewItem.date)}
+              {this.formatStringDate(viewItem.date)}
             </p>
           );
         } else {

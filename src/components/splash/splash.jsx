@@ -4,11 +4,11 @@ import './splash.styl';
 
 class Splash extends Component {
 
-  transform = prefixStyle('transform');
+  static transform = prefixStyle('transform');
 
   componentDidMount() {
     setTimeout(() => {
-      document.getElementById('splashImg').style[this.transform] = 'scale(1.1)'
+      document.getElementById('splashImg').style[Splash.transform] = 'scale(1.1)'
     }, 1);
     setTimeout(() => {
       this.props.history.push('/index');

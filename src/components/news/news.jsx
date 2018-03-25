@@ -54,7 +54,7 @@ class News extends Component {
     wrapper.appendChild(layer);
   }
 
-  static handleEmit() {
+  handleEmit() {
     this.props.history.push('/index');
   }
 
@@ -71,7 +71,7 @@ class News extends Component {
     return (
       <div>
         {css}
-        <NewsHeader history={this.props.history} handleClick={News.handleEmit.bind(this)} />
+        <NewsHeader history={this.props.history} handleClick={this.handleEmit.bind(this)} />
         <Scroll>
           <div dangerouslySetInnerHTML={{__html: this.state.data.body}} />
         </Scroll>

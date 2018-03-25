@@ -23,7 +23,7 @@ class Banner extends Component {
     speed: 400
   };
 
-  PERCENT = 0.613;
+  static percent = 0.613;
 
   // 定义类型
   static propTypes = {
@@ -69,7 +69,7 @@ class Banner extends Component {
     // 数据加载完才显示
     if (this.props.bannerData.topList.length) {
       let width = 0;
-      let height = Math.round(windowWith * this.PERCENT);
+      let height = Math.round(windowWith * Banner.percent);
       let sliderWidth = document.getElementById('slider').clientWidth;
       for (let i = 0; i < this.children.length; i++) {
         let child = this.children[i];
@@ -99,7 +99,7 @@ class Banner extends Component {
       },
       bounce: false
     });
-    this.scroll.on('scrollEnd', () => {
+    this.scroll.on('touchEnd', () => {
       let index = this.scroll.getCurrentPage().pageX;
       this.setState({
         currentIndex: index
