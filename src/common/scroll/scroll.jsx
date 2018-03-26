@@ -92,6 +92,7 @@ class Scroll extends Component {
     this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments);
   }
 
+  // 绑定到当前组件上，方便调用
   scrollToElement() {
     this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments);
   }

@@ -35,6 +35,7 @@ class Index extends Component {
   static listenScrollRealTime = 3;
   static animationDelay = 300;
   static scrollDistance = 60;
+  static scrollAnimationDuration = 700;
 
   componentWillMount() {
     getLatest()
@@ -78,13 +79,32 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    let ele = document.getElementById('scrollWrapper');
-    ele.addEventListener('touchstart', (e) => {
+    let scrollWrapper = document.getElementById('scrollWrapper');
+    scrollWrapper.addEventListener('touchstart', (e) => {
       this.startY = e.touches[0].pageY;
+      this.startX = e.touches[0].pageX;
     }, false);
 
-    ele.addEventListener('touchmove', (e) => {
+    scrollWrapper.addEventListener('touchmove', (e) => {
       this.endY = e.touches[0].pageY;
+      this.endX = e.touches[0].pageX;
+      let deltaX = this.endX - this.startX;
+      if (this.startX < 7 && deltaX > (window.innerWidth / 3)) {
+        console.log('向右滑动了')
+      }
+    }, false);
+
+    // 侧边栏滑动监听事件
+    let sidebarWrapper = document.getElementById('scrollWrapper');
+    sidebarWrapper.addEventListener('touchstart', (e) => {
+      this.xStart = e.touches[0].pageX;
+    }, false);
+    sidebarWrapper.addEventListener('touchmove', (e) => {
+      this.xEnd = e.touches[0].pageX;
+      let deltaX = this.xEnd - this.xStart;
+      if (-deltaX > (window.innerWidth / 3)) {
+        console.log('向左滑动了')
+      }
     }, false);
   }
 
@@ -93,9 +113,9 @@ class Index extends Component {
   }
 
   handleDoubleClick() {
-    console.log(document.getElementById('scrollWrapper'))
-    // 要在这里调用 Scroll 里面的 scrollToElement 方法，同时要是对应的 scroll 实例
-    // Scroll.scrollToElement(document.getElementsByClassName('list-date')[0], 1000);
+    let targetEle = document.getElementById('scrollWrapper');
+    // 通过 refs 取得 scroll 组件，从而得以调用 scroll 组件的 scrollToElement 方法
+    this.refs.scrollWrapper.scrollToElement(targetEle, Index.scrollAnimationDuration)
   }
 
   handleClickOfSidebar() {
@@ -107,6 +127,7 @@ class Index extends Component {
   }
 
   fadeInAnimation() {
+    // 为了引发 scroll 中 state 的变化，从而使得 scroll refresh
     this.setState({
       scrollRefresh: 1
     });
@@ -122,6 +143,7 @@ class Index extends Component {
   }
 
   fadeOutAnimation() {
+    // 为了引发 scroll 中 state 的变化，从而使得 scroll refresh
     this.setState({
       scrollRefresh: 0
     });
@@ -159,7 +181,7 @@ class Index extends Component {
   }
 
   scroll(position) {
-    if (position.y > -50) {
+    if (position.y > -50 && this.state.headerTitle !== '首页') {
       this.setState({
         headerTitle: '首页'
       });
@@ -195,6 +217,7 @@ class Index extends Component {
                  emitDoubleClick={this.handleDoubleClick.bind(this)} />
         <Scroll className="scroll-wrapper"
                 id="scrollWrapper"
+                ref="scrollWrapper"
                 probeType={Index.listenScrollRealTime}
                 scrollEvent={this.state.scrollEvent}>
           <div className="slider-wrapper" id="sliderWrapper">
