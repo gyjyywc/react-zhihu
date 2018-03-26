@@ -4,7 +4,7 @@ import './m-header.styl';
 
 class MHeader extends Component {
   static defaultProps = {
-    title: '首页'
+    title: '首页',
   };
 
   static propTypes = {
@@ -21,7 +21,7 @@ class MHeader extends Component {
 
   render() {
     return (
-      <div className="header" onDoubleClick={(e) => {
+      <div className="header" onDoubleClick={() => {
         this.emitDoubleClick();
       }}>
         <span className="left-content">

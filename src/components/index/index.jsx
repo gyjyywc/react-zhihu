@@ -15,6 +15,7 @@ class Index extends Component {
     nowDate: 0,
     themeData: [],
     headerTitle: '首页',
+    scrollRefresh: 0,
     bannerData: {
       topList: [],
       handleClick: {}
@@ -92,8 +93,9 @@ class Index extends Component {
   }
 
   handleDoubleClick() {
-    // Scroll.scrollToElement(document.getElementById('sliderWrapper'), 1000);
-    Scroll.scrollToElement(document.getElementsByClassName('list-item')[0], 1000);
+    console.log(document.getElementById('scrollWrapper'))
+    // 要在这里调用 Scroll 里面的 scrollToElement 方法，同时要是对应的 scroll 实例
+    // Scroll.scrollToElement(document.getElementsByClassName('list-date')[0], 1000);
   }
 
   handleClickOfSidebar() {
@@ -105,6 +107,9 @@ class Index extends Component {
   }
 
   fadeInAnimation() {
+    this.setState({
+      scrollRefresh: 1
+    });
     let sidebarWrapper = document.getElementById('sidebarWrapper');
     sidebarWrapper.style.display = `block`;
     // 保证动画效果
@@ -117,6 +122,9 @@ class Index extends Component {
   }
 
   fadeOutAnimation() {
+    this.setState({
+      scrollRefresh: 0
+    });
     let sidebarWrapper = document.getElementById('sidebarWrapper');
     sidebarWrapper.style.background = `transparent`;
     // sidebar主体
@@ -161,7 +169,7 @@ class Index extends Component {
         if (this.startY > this.endY && this.state.headerTitle !== dates[i].textContent) {
           let rec = dates[i].getBoundingClientRect();
           // 加个大于是为了性能优化，在手机上快速滚动卡的要命(大量 state变化导致重新 render)
-          if (rec.top < Index.scrollDistance && rec.top > (Index.scrollDistance - 20)) {
+          if (rec.top < Index.scrollDistance && rec.top > (-window.innerHeight + 50)) {
             this.setState({
               headerTitle: dates[i].textContent
             });
@@ -188,7 +196,6 @@ class Index extends Component {
         <Scroll className="scroll-wrapper"
                 id="scrollWrapper"
                 probeType={Index.listenScrollRealTime}
-
                 scrollEvent={this.state.scrollEvent}>
           <div className="slider-wrapper" id="sliderWrapper">
             <div className="slider-content">

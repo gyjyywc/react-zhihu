@@ -6,7 +6,9 @@ import './sidebar.styl'
 class Sidebar extends Component {
 
   static defaultProps = {
-    themeData: []
+    themeData: [],
+    // 修改 scroll props 重新刷新 scroll
+    scrollRefresh: 0,
   };
 
   static propTypes = {
@@ -55,7 +57,7 @@ class Sidebar extends Component {
           <i className="icon-home" />
           <em>首页</em>
         </div>
-        <Scroll className="side-scroll" id="sideScroll">
+        <Scroll className="side-scroll" id="sideScroll" refreshFlag={this.props.scrollRefresh}>
           <ul className="theme-wrapper">
             {nameLists}
           </ul>

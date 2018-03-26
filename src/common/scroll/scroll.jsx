@@ -7,17 +7,20 @@ class Scroll extends Component {
   static defaultProps = {
     className: '',
     id: '',
+    refreshFlag: 0,
     probeType: 2,
     click: true,
     bounceTime: 700,
     refreshDelay: 300,
-    scrollEvent: {}
+    scrollEvent: {},
+    hand: () => {}
   };
 
   // 定义类型
   static propTypes = {
     id: PropTypes.string.isRequired,
     className: PropTypes.string,
+    refreshFlag: PropTypes.number,
     probeType: PropTypes.number,
     click: PropTypes.bool,
     data: PropTypes.array,
@@ -33,11 +36,10 @@ class Scroll extends Component {
     }, this.props.refreshDelay);
   }
 
-  shouldComponentUpdate() {
+  componentWillReceiveProps() {
     setTimeout(() => {
-      Scroll.refresh();
+      this.refresh();
     }, this.props.refreshDelay);
-    return true;
   }
 
   initScroll() {
@@ -45,55 +47,53 @@ class Scroll extends Component {
     if (!wrapper) {
       return;
     }
-    Scroll.scroll = new BScroll(wrapper, {
+    this.scroll = new BScroll(wrapper, {
       probeType: this.props.probeType,
       click: this.props.click,
       bounceTime: this.props.bounceTime
     });
     if (this.props.scrollEvent.scroll) {
-      Scroll.scroll.on('scroll', (position) => {
+      this.scroll.on('scroll', (position) => {
         this.props.scrollEvent.scroll(position);
       });
     }
     if (this.props.scrollEvent.scrollToEnd) {
-      Scroll.scroll.on('scrollEnd', (position) => {
-        if (Scroll.scroll.y <= (Scroll.scroll.maxScrollY + 50)) {
+      this.scroll.on('scrollEnd', (position) => {
+        if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
           this.props.scrollEvent.scrollToEnd(position);
         }
       });
     }
     if (this.props.scrollEvent.touchEnd) {
-      Scroll.scroll.on('touchEnd', (position) => {
+      this.scroll.on('touchEnd', (position) => {
         this.props.scrollEvent.touchEnd(position);
       });
     }
     if (this.props.scrollEvent.beforeScroll) {
-      Scroll.scroll.on('beforeScrollStart', () => {
+      this.scroll.on('beforeScrollStart', () => {
         this.props.scrollEvent.beforeScroll();
       });
     }
   }
 
-  static enable() {
-    Scroll.scroll && Scroll.scroll.enable();
+  enable() {
+    this.scroll && this.scroll.enable();
   }
 
-  static disable() {
-    Scroll.scroll && Scroll.scroll.disable();
+  disable() {
+    this.scroll && this.scroll.disable();
   }
 
-  static refresh() {
-    Scroll.scroll && Scroll.scroll.refresh();
+  refresh() {
+    this.scroll && this.scroll.refresh();
   }
 
-  static scrollTo(x, y) {
-    Scroll.scroll && Scroll.scroll.scrollTo(x, y);
+  scrollTo() {
+    this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments);
   }
 
-  static scrollToElement(el, time, offsetX, offsetY, easin) {
-    console.log(el)
-    console.log(time)
-    Scroll.scroll && Scroll.scroll.scrollToElement(el, time, offsetX, offsetY, easin);
+  scrollToElement() {
+    this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments);
   }
 
   render() {
