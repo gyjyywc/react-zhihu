@@ -6,20 +6,22 @@
   bottom: 0
   width: 100%
   background: $color-background
-  .slider-wrapper
-    position: relative
-    padding-top: 61%
-    width: 100%
-    height: 0
-    overflow: hidden
-    .slider-content
-      position: absolute
-      top: 0
-      left: 0
+  .list-scroll
+    @extend .scroll-wrapper
+    .slider-wrapper
+      position: relative
+      padding-top: 61%
       width: 100%
-      height: 100%
-  .list-loading
-    display: none
+      height: 0
+      overflow: hidden
+      .slider-content
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+    .list-loading
+      display: none
 
 .loading-wrapper
   position: absolute

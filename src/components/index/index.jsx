@@ -78,34 +78,81 @@ class Index extends Component {
     });
   }
 
-  componentDidMount() {
-    let scrollWrapper = document.getElementById('scrollWrapper');
-    scrollWrapper.addEventListener('touchstart', (e) => {
-      this.startY = e.touches[0].pageY;
-      this.startX = e.touches[0].pageX;
-    }, false);
+  handleScrollWrapperTouchStart(e) {
+    this.startY = e.touches[0].pageY;
+    this.startX = e.touches[0].pageX;
+  }
 
-    scrollWrapper.addEventListener('touchmove', (e) => {
-      this.endY = e.touches[0].pageY;
-      this.endX = e.touches[0].pageX;
-      let deltaX = this.endX - this.startX;
-      if (this.startX < 7 && deltaX > (window.innerWidth / 3)) {
-        console.log('向右滑动了')
+  handleScrollWrapperTouchMove(e) {
+    this.endY = e.touches[0].pageY;
+    this.endX = e.touches[0].pageX;
+    let sidebar = this.refs.sidebarWrapper.children[0];
+    let deltaX = this.endX - this.startX;
+    if (this.startX < 10 && deltaX > 0) {
+      this.translateInPercent = parseInt((deltaX / window.innerWidth) * 100, 10);
+      let backgroundOpacity = 0.3 * (this.translateInPercent / 100);
+      if (backgroundOpacity > 0.3) {
+        backgroundOpacity = 0.3
       }
-    }, false);
+      this.refs.sidebarWrapper.style.display = 'block';
+      setTimeout(() => {
+        let percent = (-100 + this.translateInPercent);
+        if (percent > 0) {
+          percent = 0;
+        }
+        sidebar.style[Index.transform] = `translate3d(${percent}%,0,0)`;
+        this.refs.sidebarWrapper.style.background = `rgba(0,0,0,${backgroundOpacity})`
+      }, 1);
+    }
+  }
 
-    // 侧边栏滑动监听事件
-    let sidebarWrapper = document.getElementById('scrollWrapper');
-    sidebarWrapper.addEventListener('touchstart', (e) => {
-      this.xStart = e.touches[0].pageX;
-    }, false);
-    sidebarWrapper.addEventListener('touchmove', (e) => {
-      this.xEnd = e.touches[0].pageX;
-      let deltaX = this.xEnd - this.xStart;
-      if (-deltaX > (window.innerWidth / 3)) {
-        console.log('向左滑动了')
+  handleScrollWrapperTouchEnd() {
+    let sidebar = this.refs.sidebarWrapper.children[0];
+    let sidebarWrapper = this.refs.sidebarWrapper;
+    if (this.translateInPercent >= 50) {
+      sidebar.style[Index.transform] = `translate3d(0,0,0)`;
+    } else if (this.translateInPercent < 50) {
+      sidebar.style[Index.transform] = `translate3d(-100%,0,0)`;
+      setTimeout(() => {
+        sidebarWrapper.style.display = 'none';
+      }, Index.animationDelay / 2);
+    }
+  }
+
+  handleSidebarTouchStart(e) {
+    this.xStart = e.touches[0].pageX;
+  }
+
+  handleSidebarTouchMove(e) {
+    // 注意最开始使用 e.target 造成了BUG，原因是 e.target 是触摸的元素，而不是我想要操作的外层 wrapper
+    this.xEnd = e.touches[0].pageX;
+    let xDelta = this.xEnd - this.xStart;
+    let sidebar = this.refs.sidebarWrapper.children[0];
+    if (xDelta < 0) {
+      this.translateOutPercent = parseInt(((-xDelta) / sidebar.clientWidth) * 100, 10);
+      let backgroundOpacity = 0.3 * (1 - (this.translateOutPercent / 100));
+      if (backgroundOpacity < 0) {
+        backgroundOpacity = 0;
       }
-    }, false);
+      if (this.translateOutPercent > 100) {
+        this.translateOutPercent = 100;
+      }
+      sidebar.style[Index.transform] = `translate3d(-${this.translateOutPercent}%,0,0)`;
+      this.refs.sidebarWrapper.style.background = `rgba(0,0,0,${backgroundOpacity})`
+    }
+  }
+
+  handleSidebarTouchEnd() {
+    let sidebar = this.refs.sidebarWrapper.children[0];
+    let sidebarWrapper = this.refs.sidebarWrapper;
+    if (this.translateOutPercent >= 50) {
+      sidebar.style[Index.transform] = `translate3d(-100%,0,0)`;
+      setTimeout(() => {
+        sidebarWrapper.style.display = 'none';
+      }, Index.animationDelay / 2);
+    } else if (this.translateOutPercent < 50) {
+      sidebar.style[Index.transform] = `translate3d(0,0,0)`;
+    }
   }
 
   handleEmit(newsItem) {
@@ -115,34 +162,10 @@ class Index extends Component {
   handleDoubleClick() {
     let targetEle = document.getElementById('scrollWrapper');
     // 通过 refs 取得 scroll 组件，从而得以调用 scroll 组件的 scrollToElement 方法
-    this.refs.scrollWrapper.scrollToElement(targetEle, Index.scrollAnimationDuration)
+    this.refs.listScroll.scrollToElement(targetEle, Index.scrollAnimationDuration)
   }
 
   handleClickOfSidebar() {
-    this.fadeOutAnimation();
-  }
-
-  handleClickOfMHeader() {
-    this.fadeInAnimation();
-  }
-
-  fadeInAnimation() {
-    // 为了引发 scroll 中 state 的变化，从而使得 scroll refresh
-    this.setState({
-      scrollRefresh: 1
-    });
-    let sidebarWrapper = document.getElementById('sidebarWrapper');
-    sidebarWrapper.style.display = `block`;
-    // 保证动画效果
-    setTimeout(() => {
-      sidebarWrapper.style.background = `rgba(0,0,0,0.3)`;
-      // sidebar主体
-      let sidebar = sidebarWrapper.children[0];
-      sidebar.style[Index.transform] = `translate3d(0,0,0)`;
-    }, Index.animationDelay / 10);
-  }
-
-  fadeOutAnimation() {
     // 为了引发 scroll 中 state 的变化，从而使得 scroll refresh
     this.setState({
       scrollRefresh: 0
@@ -156,6 +179,22 @@ class Index extends Component {
     setTimeout(() => {
       sidebarWrapper.style.display = `none`;
     }, Index.animationDelay);
+  }
+
+  handleClickOfMHeader() {
+    // 为了引发 scroll 中 state 的变化，从而使得 scroll refresh
+    this.setState({
+      scrollRefresh: 1
+    });
+    let sidebarWrapper = document.getElementById('sidebarWrapper');
+    sidebarWrapper.style.display = `block`;
+    // 保证动画效果
+    setTimeout(() => {
+      sidebarWrapper.style.background = `rgba(0,0,0,0.3)`;
+      // sidebar主体
+      let sidebar = sidebarWrapper.children[0];
+      sidebar.style[Index.transform] = `translate3d(0,0,0)`;
+    }, Index.animationDelay / 10);
   }
 
   scrollToEnd() {
@@ -181,7 +220,7 @@ class Index extends Component {
   }
 
   scroll(position) {
-    if (position.y > -50 && this.state.headerTitle !== '首页') {
+    if (position.y > -Index.scrollDistance && this.state.headerTitle !== '首页') {
       this.setState({
         headerTitle: '首页'
       });
@@ -191,7 +230,7 @@ class Index extends Component {
         if (this.startY > this.endY && this.state.headerTitle !== dates[i].textContent) {
           let rec = dates[i].getBoundingClientRect();
           // 加个大于是为了性能优化，在手机上快速滚动卡的要命(大量 state变化导致重新 render)
-          if (rec.top < Index.scrollDistance && rec.top > (-window.innerHeight + 50)) {
+          if (rec.top < Index.scrollDistance && rec.top > (-window.innerHeight + Index.scrollDistance)) {
             this.setState({
               headerTitle: dates[i].textContent
             });
@@ -199,7 +238,7 @@ class Index extends Component {
         } else if (i !== 0 && this.startY < this.endY && this.state.headerTitle !== dates[i - 1].textContent) {
           let top = dates[i].getBoundingClientRect().top;
           // 小于是为了限制最后一个 list-item 一直满足条件而使得满足条件的当前 list-item 不能崭露头角
-          if (top < (window.innerHeight - 50) && top > Index.scrollDistance) {
+          if (top < (window.innerHeight - Index.scrollDistance) && top > Index.scrollDistance) {
             this.setState({
               headerTitle: dates[i - 1].textContent
             });
@@ -215,26 +254,49 @@ class Index extends Component {
         <MHeader title={this.state.headerTitle}
                  emitClick={this.handleClickOfMHeader.bind(this)}
                  emitDoubleClick={this.handleDoubleClick.bind(this)} />
-        <Scroll className="scroll-wrapper"
-                id="scrollWrapper"
-                ref="scrollWrapper"
-                probeType={Index.listenScrollRealTime}
-                scrollEvent={this.state.scrollEvent}>
-          <div className="slider-wrapper" id="sliderWrapper">
-            <div className="slider-content">
-              <Banner bannerData={this.state.bannerData} />
+        <div className="scroll-wrapper"
+             id="scrollWrapper"
+             ref="scrollWrapper"
+             onTouchStart={(e) => {
+               this.handleScrollWrapperTouchStart(e);
+             }}
+             onTouchMove={(e) => {
+               this.handleScrollWrapperTouchMove(e);
+             }}
+             onTouchEnd={() => {
+               this.handleScrollWrapperTouchEnd();
+             }}>
+          <Scroll className="list-scroll"
+                  id="listScroll"
+                  ref="listScroll"
+                  probeType={Index.listenScrollRealTime}
+                  scrollEvent={this.state.scrollEvent}>
+            <div className="slider-wrapper" id="sliderWrapper">
+              <div className="slider-content">
+                <Banner bannerData={this.state.bannerData} />
+              </div>
             </div>
-          </div>
-          <ListView listViewData={this.state.listViewData} />
-          <div className="list-loading" id="listLoading">
-            <Loading title="" />
-          </div>
-        </Scroll>
+            <ListView listViewData={this.state.listViewData} />
+            <div className="list-loading" id="listLoading">
+              <Loading title="" />
+            </div>
+          </Scroll>
+        </div>
         <div className="loading-wrapper" id="loadingWrapper">
           <Loading />
         </div>
         <div className="sidebar-wrapper"
              id="sidebarWrapper"
+             ref="sidebarWrapper"
+             onTouchStart={(e) => {
+               this.handleSidebarTouchStart(e)
+             }}
+             onTouchMove={(e) => {
+               this.handleSidebarTouchMove(e)
+             }}
+             onTouchEnd={() => {
+               this.handleSidebarTouchEnd()
+             }}
              onClick={() => {
                this.handleClickOfSidebar()
              }}>

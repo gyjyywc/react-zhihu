@@ -1,6 +1,6 @@
 import BScroll from 'better-scroll';
 import React, {Component} from 'react';
-import {windowWith, addClass} from 'assets/js/dom';
+import {addClass} from 'assets/js/dom';
 import PropTypes from 'prop-types';
 import './banner.styl';
 
@@ -69,7 +69,7 @@ class Banner extends Component {
     // 数据加载完才显示
     if (this.props.bannerData.topList.length) {
       let width = 0;
-      let height = Math.round(windowWith * Banner.percent);
+      let height = Math.round(window.innerWidth * Banner.percent);
       let sliderWidth = document.getElementById('slider').clientWidth;
       for (let i = 0; i < this.children.length; i++) {
         let child = this.children[i];

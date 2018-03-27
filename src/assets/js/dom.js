@@ -39,5 +39,3 @@ export function hasClass(el, clsName) {
   let reg = new RegExp('(^|\\s)' + clsName + '(\\s|$)');
   return reg.test(el.className);
 }
-
-export const windowWith = document.body.clientWidth || document.documentElement.clientWidth;

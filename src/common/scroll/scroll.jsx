@@ -12,8 +12,7 @@ class Scroll extends Component {
     click: true,
     bounceTime: 700,
     refreshDelay: 300,
-    scrollEvent: {},
-    hand: () => {}
+    scrollEvent: {}
   };
 
   // 定义类型
@@ -99,7 +98,8 @@ class Scroll extends Component {
 
   render() {
     return (
-      <div className={this.props.className} id={this.props.id}>
+      <div className={this.props.className}
+           id={this.props.id}>
         <div>{this.props.children}</div>
       </div>
     );
