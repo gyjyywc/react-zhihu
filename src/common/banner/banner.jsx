@@ -24,6 +24,7 @@ class Banner extends Component {
   };
 
   static percent = 0.613;
+  static initDelay = 300;
 
   // 定义类型
   static propTypes = {
@@ -48,7 +49,7 @@ class Banner extends Component {
     }
     setTimeout(() => {
       this.init();
-    }, 300);
+    }, Banner.initDelay);
   }
 
   init() {

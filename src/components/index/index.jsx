@@ -33,7 +33,7 @@ class Index extends Component {
 
   static transform = prefixStyle('transform');
   static listenScrollRealTime = 3;
-  static animationDelay = 300;
+  static animationDelay = 200;
   static scrollDistance = 60;
   static scrollAnimationDuration = 700;
 
@@ -78,12 +78,12 @@ class Index extends Component {
     });
   }
 
-  handleScrollWrapperTouchStart(e) {
+  handleListViewWrapperTouchStart(e) {
     this.startY = e.touches[0].pageY;
     this.startX = e.touches[0].pageX;
   }
 
-  handleScrollWrapperTouchMove(e) {
+  handleListViewWrapperTouchMove(e) {
     this.endY = e.touches[0].pageY;
     this.endX = e.touches[0].pageX;
     let sidebar = this.refs.sidebarWrapper.children[0];
@@ -95,50 +95,58 @@ class Index extends Component {
         backgroundOpacity = 0.3
       }
       this.refs.sidebarWrapper.style.display = 'block';
-      setTimeout(() => {
-        let percent = (-100 + this.translateInPercent);
-        if (percent > 0) {
-          percent = 0;
-        }
-        sidebar.style[Index.transform] = `translate3d(${percent}%,0,0)`;
-        this.refs.sidebarWrapper.style.background = `rgba(0,0,0,${backgroundOpacity})`
-      }, 1);
+      let percent = (-100 + this.translateInPercent);
+      if (percent > 0) {
+        percent = 0;
+      }
+      sidebar.style[Index.transform] = `translate3d(${percent}%,0,0)`;
+      this.refs.sidebarWrapper.style.background = `rgba(0,0,0,${backgroundOpacity})`
+
     }
   }
 
-  handleScrollWrapperTouchEnd() {
+  handleListViewWrapperTouchEnd() {
     let sidebar = this.refs.sidebarWrapper.children[0];
     let sidebarWrapper = this.refs.sidebarWrapper;
     if (this.translateInPercent >= 50) {
-      sidebar.style[Index.transform] = `translate3d(0,0,0)`;
+      sidebar.style[Index.transform] = 'translate3d(0,0,0)';
+      sidebarWrapper.style.background = 'rgba(0,0,0,0.3)';
     } else if (this.translateInPercent < 50) {
-      sidebar.style[Index.transform] = `translate3d(-100%,0,0)`;
-      setTimeout(() => {
+      sidebar.style[Index.transform] = 'translate3d(-100%,0,0)';
+      sidebarWrapper.style.background = 'transparent';
+      if (this.listViewWrapperTimer) {
+        clearTimeout(this.listViewWrapperTimer);
+      }
+      this.listViewWrapperTimer = setTimeout(() => {
         sidebarWrapper.style.display = 'none';
-      }, Index.animationDelay / 2);
+      }, Index.animationDelay);
     }
   }
 
   handleSidebarTouchStart(e) {
     this.xStart = e.touches[0].pageX;
+    this.YStart = e.touches[0].pageY;
   }
 
   handleSidebarTouchMove(e) {
     // 注意最开始使用 e.target 造成了BUG，原因是 e.target 是触摸的元素，而不是我想要操作的外层 wrapper
     this.xEnd = e.touches[0].pageX;
-    let xDelta = this.xEnd - this.xStart;
-    let sidebar = this.refs.sidebarWrapper.children[0];
-    if (xDelta < 0) {
-      this.translateOutPercent = parseInt(((-xDelta) / sidebar.clientWidth) * 100, 10);
-      let backgroundOpacity = 0.3 * (1 - (this.translateOutPercent / 100));
-      if (backgroundOpacity < 0) {
-        backgroundOpacity = 0;
+    this.YEnd = e.touches[0].pageY;
+    if (Math.abs(this.YEnd - this.YStart) < 100) {
+      let xDelta = this.xEnd - this.xStart;
+      let sidebar = this.refs.sidebarWrapper.children[0];
+      if (xDelta < 0) {
+        this.translateOutPercent = parseInt(((-xDelta) / sidebar.clientWidth) * 100, 10);
+        let backgroundOpacity = 0.3 * (1 - (this.translateOutPercent / 100));
+        if (backgroundOpacity < 0) {
+          backgroundOpacity = 0;
+        }
+        if (this.translateOutPercent > 100) {
+          this.translateOutPercent = 100;
+        }
+        sidebar.style[Index.transform] = `translate3d(-${this.translateOutPercent}%,0,0)`;
+        this.refs.sidebarWrapper.style.background = `rgba(0,0,0,${backgroundOpacity})`
       }
-      if (this.translateOutPercent > 100) {
-        this.translateOutPercent = 100;
-      }
-      sidebar.style[Index.transform] = `translate3d(-${this.translateOutPercent}%,0,0)`;
-      this.refs.sidebarWrapper.style.background = `rgba(0,0,0,${backgroundOpacity})`
     }
   }
 
@@ -146,12 +154,17 @@ class Index extends Component {
     let sidebar = this.refs.sidebarWrapper.children[0];
     let sidebarWrapper = this.refs.sidebarWrapper;
     if (this.translateOutPercent >= 50) {
-      sidebar.style[Index.transform] = `translate3d(-100%,0,0)`;
-      setTimeout(() => {
+      sidebar.style[Index.transform] = 'translate3d(-100%,0,0)';
+      sidebarWrapper.style.background = 'transparent';
+      if (this.sidebarScrollTimer) {
+        clearTimeout(this.sidebarScrollTimer);
+      }
+      this.sidebarScrollTimer = setTimeout(() => {
         sidebarWrapper.style.display = 'none';
-      }, Index.animationDelay / 2);
+      }, Index.animationDelay);
     } else if (this.translateOutPercent < 50) {
-      sidebar.style[Index.transform] = `translate3d(0,0,0)`;
+      sidebar.style[Index.transform] = 'translate3d(0,0,0)';
+      sidebarWrapper.style.background = 'rgba(0,0,0,0.3)';
     }
   }
 
@@ -176,7 +189,10 @@ class Index extends Component {
     let sidebar = sidebarWrapper.children[0];
     sidebar.style[Index.transform] = `translate3d(-100%,0,0)`;
     // 保证动画效果，延迟时间与动画时一致
-    setTimeout(() => {
+    if (this.ClickOutTimer) {
+      clearTimeout(this.ClickOutTimer);
+    }
+    this.ClickOutTimer = setTimeout(() => {
       sidebarWrapper.style.display = `none`;
     }, Index.animationDelay);
   }
@@ -189,12 +205,15 @@ class Index extends Component {
     let sidebarWrapper = document.getElementById('sidebarWrapper');
     sidebarWrapper.style.display = `block`;
     // 保证动画效果
-    setTimeout(() => {
+    if (this.clickInTimer) {
+      clearTimeout(this.clickInTimer);
+    }
+    this.clickInTimer = setTimeout(() => {
       sidebarWrapper.style.background = `rgba(0,0,0,0.3)`;
       // sidebar主体
       let sidebar = sidebarWrapper.children[0];
       sidebar.style[Index.transform] = `translate3d(0,0,0)`;
-    }, Index.animationDelay / 10);
+    }, Index.animationDelay);
   }
 
   scrollToEnd() {
@@ -254,34 +273,33 @@ class Index extends Component {
         <MHeader title={this.state.headerTitle}
                  emitClick={this.handleClickOfMHeader.bind(this)}
                  emitDoubleClick={this.handleDoubleClick.bind(this)} />
-        <div className="scroll-wrapper"
-             id="scrollWrapper"
-             ref="scrollWrapper"
-             onTouchStart={(e) => {
-               this.handleScrollWrapperTouchStart(e);
-             }}
-             onTouchMove={(e) => {
-               this.handleScrollWrapperTouchMove(e);
-             }}
-             onTouchEnd={() => {
-               this.handleScrollWrapperTouchEnd();
-             }}>
-          <Scroll className="list-scroll"
-                  id="listScroll"
-                  ref="listScroll"
-                  probeType={Index.listenScrollRealTime}
-                  scrollEvent={this.state.scrollEvent}>
-            <div className="slider-wrapper" id="sliderWrapper">
-              <div className="slider-content">
-                <Banner bannerData={this.state.bannerData} />
-              </div>
+        <Scroll className="list-scroll"
+                id="listScroll"
+                ref="listScroll"
+                probeType={Index.listenScrollRealTime}
+                scrollEvent={this.state.scrollEvent}>
+          <div className="slider-wrapper" id="sliderWrapper">
+            <div className="slider-content">
+              <Banner bannerData={this.state.bannerData} />
             </div>
+          </div>
+          <div id="listViewWrapper"
+               ref="listViewWrapper"
+               onTouchStart={(e) => {
+                 this.handleListViewWrapperTouchStart(e);
+               }}
+               onTouchMove={(e) => {
+                 this.handleListViewWrapperTouchMove(e);
+               }}
+               onTouchEnd={() => {
+                 this.handleListViewWrapperTouchEnd();
+               }}>
             <ListView listViewData={this.state.listViewData} />
-            <div className="list-loading" id="listLoading">
-              <Loading title="" />
-            </div>
-          </Scroll>
-        </div>
+          </div>
+          <div className="list-loading" id="listLoading">
+            <Loading title="" />
+          </div>
+        </Scroll>
         <div className="loading-wrapper" id="loadingWrapper">
           <Loading />
         </div>
