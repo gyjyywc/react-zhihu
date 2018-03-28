@@ -178,23 +178,26 @@ class Index extends Component {
     this.refs.listScroll.scrollToElement(targetEle, Index.scrollAnimationDuration)
   }
 
-  handleClickOfSidebar() {
-    // 为了引发 scroll 中 state 的变化，从而使得 scroll refresh
-    this.setState({
-      scrollRefresh: 0
-    });
+  handleClickOfSidebar(e) {
     let sidebarWrapper = document.getElementById('sidebarWrapper');
-    sidebarWrapper.style.background = `transparent`;
-    // sidebar主体
-    let sidebar = sidebarWrapper.children[0];
-    sidebar.style[Index.transform] = `translate3d(-100%,0,0)`;
-    // 保证动画效果，延迟时间与动画时一致
-    if (this.ClickOutTimer) {
-      clearTimeout(this.ClickOutTimer);
+    if (e.target === sidebarWrapper) {
+      // 为了引发 scroll 中 state 的变化，从而使得 scroll refresh
+      this.setState({
+        scrollRefresh: 0
+      });
+
+      sidebarWrapper.style.background = `transparent`;
+      // sidebar主体
+      let sidebar = sidebarWrapper.children[0];
+      sidebar.style[Index.transform] = `translate3d(-100%,0,0)`;
+      // 保证动画效果，延迟时间与动画时一致
+      if (this.ClickOutTimer) {
+        clearTimeout(this.ClickOutTimer);
+      }
+      this.ClickOutTimer = setTimeout(() => {
+        sidebarWrapper.style.display = `none`;
+      }, Index.animationDelay);
     }
-    this.ClickOutTimer = setTimeout(() => {
-      sidebarWrapper.style.display = `none`;
-    }, Index.animationDelay);
   }
 
   handleClickOfMHeader() {
@@ -307,16 +310,16 @@ class Index extends Component {
              id="sidebarWrapper"
              ref="sidebarWrapper"
              onTouchStart={(e) => {
-               this.handleSidebarTouchStart(e)
+               this.handleSidebarTouchStart(e);
              }}
              onTouchMove={(e) => {
-               this.handleSidebarTouchMove(e)
+               this.handleSidebarTouchMove(e);
              }}
              onTouchEnd={() => {
-               this.handleSidebarTouchEnd()
+               this.handleSidebarTouchEnd();
              }}
-             onClick={() => {
-               this.handleClickOfSidebar()
+             onClick={(e) => {
+               this.handleClickOfSidebar(e);
              }}>
           <Sidebar themeData={this.state.themeData} />
         </div>

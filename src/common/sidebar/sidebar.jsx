@@ -15,11 +15,6 @@ class Sidebar extends Component {
     themeData: PropTypes.array.isRequired
   };
 
-  handleClick(e) {
-    // 阻止冒泡到外层 wrapper 点击隐藏
-    e.stopPropagation();
-  }
-
   render() {
     let nameLists;
     if (this.props.themeData) {
@@ -36,9 +31,7 @@ class Sidebar extends Component {
     }
 
     return (
-      <div className="sidebar" id="sidebar" onClick={(e) => {
-        this.handleClick(e)
-      }}>
+      <div className="sidebar" id="sidebar">
         <div className="side-header">
           <img className="avatar" src={require('./avatar.jpg')} alt="头像" />
           <em className="user-name">未登录</em>
