@@ -17,7 +17,7 @@ let vendor = (() => {
 })();
 
 // export 部分
-export function prefixStyle(style) {
+function prefixStyle(style) {
   if (vendor === false) {
     return;
   }
@@ -27,7 +27,7 @@ export function prefixStyle(style) {
   return vendor + style.charAt(0).toUpperCase() + style.substr(1);
 }
 
-export function addClass(el, clsName) {
+function addClass(el, clsName) {
   if (!hasClass(el, clsName)) {
     let newCls = el.className.split(' ');
     newCls.push(clsName);
@@ -35,7 +35,9 @@ export function addClass(el, clsName) {
   }
 }
 
-export function hasClass(el, clsName) {
+function hasClass(el, clsName) {
   let reg = new RegExp('(^|\\s)' + clsName + '(\\s|$)');
   return reg.test(el.className);
 }
+
+export {prefixStyle, addClass, hasClass};

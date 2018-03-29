@@ -17,22 +17,24 @@ export function getLatest() {
   return axiosPromise(url);
 }
 
-export function getNews(newsId) {
+function getNews(newsId) {
   const url = BASE + API.news + `/${newsId}`;
   return axiosPromise(url);
 }
 
-export function getPreviousNews(dateString) {
+function getPreviousNews(dateString) {
   const url = BASE + API.previous + `/${dateString}`;
   return axiosPromise(url);
 }
 
-export function getThemes() {
+function getThemes() {
   const url = BASE + API.theme;
   return axiosPromise(url);
 }
 
-export function getThemeNews(themeNewsId) {
+function getThemeNews(themeNewsId) {
   const url = BASE + API.theme + `/${themeNewsId}`;
   return axiosPromise(url);
 }
+
+export {getNews, getPreviousNews, getThemes, getThemeNews};

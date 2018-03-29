@@ -1,7 +1,9 @@
-export const BASE = '/api';
-export const API = {
-    latest: '/news/latest',
-    news: '/news',
-    previous: '/news/before',
-    theme: '/themes'
+const BASE = '/api';
+const API = {
+  latest: '/news/latest',
+  news: '/news',
+  previous: '/news/before',
+  theme: '/themes'
 };
+
+export {BASE, API};
