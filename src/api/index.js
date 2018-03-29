@@ -33,7 +33,7 @@ function getThemes() {
 }
 
 function getThemeNews(themeNewsId) {
-  const url = BASE + API.theme + `/${themeNewsId}`;
+  const url = BASE + API.themeNews + `/${themeNewsId}`;
   return axiosPromise(url);
 }
 

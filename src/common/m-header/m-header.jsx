@@ -5,6 +5,7 @@ import './m-header.styl';
 class MHeader extends Component {
   static defaultProps = {
     title: '首页',
+    icon: '',
   };
 
   static propTypes = {
@@ -30,7 +31,7 @@ class MHeader extends Component {
           }} />
           <em>{this.props.title}</em>
         </span>
-        <i className="icon-setting" />
+        <i className={"header-icon " + this.props.icon} />
       </div>
     );
   }

@@ -168,6 +168,10 @@ class Index extends Component {
     }
   }
 
+  handleSidebarClick(themesId) {
+    this.props.history.push('/theme-index/' + themesId);
+  }
+
   handleEmit(newsItem) {
     this.props.history.push('/news/' + newsItem.id);
   }
@@ -274,6 +278,7 @@ class Index extends Component {
     return (
       <div>
         <MHeader title={this.state.headerTitle}
+                 icon="icon-setting"
                  emitClick={this.handleClickOfMHeader.bind(this)}
                  emitDoubleClick={this.handleDoubleClick.bind(this)} />
         <Scroll className="list-scroll"
@@ -321,7 +326,7 @@ class Index extends Component {
              onClick={(e) => {
                this.handleClickOfSidebar(e);
              }}>
-          <Sidebar themeData={this.state.themeData} />
+          <Sidebar themeData={this.state.themeData} emitClick={this.handleSidebarClick.bind(this)} />
         </div>
       </div>
     );

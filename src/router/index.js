@@ -6,6 +6,7 @@ import Splash from "components/splash/splash";
 
 const Index = asyncComponent(() => import("components/index/index"));
 const News = asyncComponent(() => import("components/news/news"));
+const ThemeIndex = asyncComponent(() => import("components/theme-index/theme-index"));
 
 // react-router4 不再推荐将所有路由规则放在同一个地方集中式路由，子路由应该由父组件动态配置，组件在哪里匹配就在哪里渲染，更加灵活
 class RouteConfig extends Component {
@@ -13,10 +14,11 @@ class RouteConfig extends Component {
     return (
       <HashRouter>
         <Switch>
-          <Route path="/" exact component={Splash}/>
-          <Route path="/index" component={Index}/>
-          <Route path="/news/:newsId" component={News}/>
-          <Redirect to="/"/>
+          <Route path="/" exact component={Splash} />
+          <Route path="/index" component={Index} />
+          <Route path="/news/:newsId" component={News} />
+          <Route path="/theme-index/:themesId" component={ThemeIndex} />
+          <Redirect to="/" />
         </Switch>
       </HashRouter>
     )

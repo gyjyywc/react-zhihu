@@ -15,13 +15,19 @@ class Sidebar extends Component {
     themeData: PropTypes.array.isRequired
   };
 
+  handleClick(themesId) {
+    this.props.emitClick(themesId);
+  }
+
   render() {
     let nameLists;
     if (this.props.themeData) {
       let nameList;
       nameLists = this.props.themeData.map((item, index) => {
         nameList = (
-          <li key={item.id + '-' + index}>
+          <li key={item.id + '-' + index} onClick={() => {
+            this.handleClick(item.id);
+          }}>
             <em>{item.name}</em>
             <i className="icon-add" />
           </li>

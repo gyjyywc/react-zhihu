@@ -3,7 +3,8 @@ const API = {
   latest: '/news/latest',
   news: '/news',
   previous: '/news/before',
-  theme: '/themes'
+  theme: '/themes',
+  themeNews: '/theme'
 };
 
 export {BASE, API};
