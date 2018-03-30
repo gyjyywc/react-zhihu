@@ -6,7 +6,8 @@ import Loading from 'common/loading/loading'
 import Sidebar from 'common/sidebar/sidebar'
 import React, {Component} from 'react';
 import {getLatest, getPreviousNews, getThemes} from 'api/index';
-import {prefixStyle} from "assets/js/dom";
+import {prefixStyle} from "assets/js/utils";
+import {sidebarClickIn, sidebarClickOut} from "assets/js/common";
 import './index.styl'
 
 class Index extends Component {
@@ -189,18 +190,7 @@ class Index extends Component {
       this.setState({
         scrollRefresh: 0
       });
-
-      sidebarWrapper.style.background = `transparent`;
-      // sidebar主体
-      let sidebar = sidebarWrapper.children[0];
-      sidebar.style[Index.transform] = `translate3d(-100%,0,0)`;
-      // 保证动画效果，延迟时间与动画时一致
-      if (this.ClickOutTimer) {
-        clearTimeout(this.ClickOutTimer);
-      }
-      this.ClickOutTimer = setTimeout(() => {
-        sidebarWrapper.style.display = `none`;
-      }, Index.animationDelay);
+      sidebarClickOut();
     }
   }
 
@@ -209,18 +199,7 @@ class Index extends Component {
     this.setState({
       scrollRefresh: 1
     });
-    let sidebarWrapper = document.getElementById('sidebarWrapper');
-    sidebarWrapper.style.display = `block`;
-    // 保证动画效果
-    if (this.clickInTimer) {
-      clearTimeout(this.clickInTimer);
-    }
-    this.clickInTimer = setTimeout(() => {
-      sidebarWrapper.style.background = `rgba(0,0,0,0.3)`;
-      // sidebar主体
-      let sidebar = sidebarWrapper.children[0];
-      sidebar.style[Index.transform] = `translate3d(0,0,0)`;
-    }, Index.animationDelay);
+    sidebarClickIn();
   }
 
   scrollToEnd() {

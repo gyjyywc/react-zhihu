@@ -35,13 +35,21 @@ class ListView extends Component {
               {this.formatStringDate(viewItem.date)}
             </p>
           );
-        } else {
+        } else if (viewItem.images) {
           view = (
-            <div className="list-item"
+            <div className="list-item__with-img"
                  key={viewItem.id + '-' + index}
                  onClick={() => this.emitClick(viewItem)}>
               <em>{viewItem.title}</em>
               <img src={viewItem.images[0]} alt="" />
+            </div>
+          );
+        } else if (!viewItem.image && !viewItem.images) {
+          view = (
+            <div className="list-item__without-img"
+                 key={viewItem.id + '-' + index}
+                 onClick={() => this.emitClick(viewItem)}>
+              <em>{viewItem.title}</em>
             </div>
           );
         }

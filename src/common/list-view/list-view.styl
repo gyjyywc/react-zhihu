@@ -1,5 +1,19 @@
 @import "~assets/stylus/variable"
 
+.list-item
+  display: flex
+  margin: 1.5% 0
+  padding: 3% 4%
+  width: 100%
+  border-radius: 3px
+  box-sizing: border-box
+  background: $color-background-l
+  em
+    flex: 1
+    margin-right: 20px
+    line-height: 1.2em
+    font-size: $font-size-large-s
+
 .list-wrapper
   padding: 1.5%
   background: $color-background
@@ -7,20 +21,11 @@
     padding: 10px 5px;
     color: $color-text-l
     font-size: $font-size-medium
-  .list-item
-    display: flex
-    margin: 1.5% 0
-    padding: 3% 4%
-    width: 100%
+  .list-item__without-img
+    @extend .list-item
+  .list-item__with-img
+    @extend .list-item
     height: 90px
-    border-radius: 3px
-    box-sizing: border-box
-    background: $color-background-l
-    em
-      flex: 1
-      margin-right: 20px
-      line-height: 1.2em
-      font-size: $font-size-large-s
     img
       flex: 0 0 70px
       width: 70px
