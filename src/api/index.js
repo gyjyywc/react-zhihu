@@ -12,7 +12,7 @@ const axiosPromise = function (url) {
     })
 };
 
-export function getLatest() {
+function getLatest() {
   const url = BASE + API.latest;
   return axiosPromise(url);
 }
@@ -37,4 +37,4 @@ function getThemeNews(themeNewsId) {
   return axiosPromise(url);
 }
 
-export {getNews, getPreviousNews, getThemes, getThemeNews};
+export {getLatest, getNews, getPreviousNews, getThemes, getThemeNews};
