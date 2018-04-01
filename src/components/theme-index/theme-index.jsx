@@ -229,7 +229,8 @@ class themeIndex extends Component {
                 scrollEvent={this.state.scrollEvent}>
           <div className="slider-wrapper" id="sliderWrapper">
             <div className="slider-content">
-              hello world!
+              <img src={this.state.bannerImg} alt="" />
+              <em>{this.state.description}</em>
             </div>
           </div>
           <div id="listViewWrapper"
