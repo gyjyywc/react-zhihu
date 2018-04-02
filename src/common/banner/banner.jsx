@@ -1,5 +1,6 @@
 import BScroll from 'better-scroll';
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 import {addClass} from 'assets/js/utils';
 import PropTypes from 'prop-types';
 import './banner.styl';
@@ -139,11 +140,6 @@ class Banner extends Component {
     }, this.props.interval);
   }
 
-  // 只做事件分发，不做业务处理。解耦
-  emitClick(topStory) {
-    this.props.bannerData.handleClick(topStory);
-  }
-
   render() {
     // 先隐藏，然后通过 setSliderWidthAndHeight 添加 slider-item 类名后显示，保证低网速下体验
     let style = {
@@ -153,10 +149,10 @@ class Banner extends Component {
     let topStoryPic = this.props.bannerData.topList.map((topStory) => {
       return (
         <div key={topStory.id}>
-          <a style={style} onClick={() => this.emitClick(topStory)}>
+          <Link style={style} to={'/news/' + topStory.id}>
             <img src={topStory.image} alt="" />
             <em>{topStory.title}</em>
-          </a>
+          </Link>
         </div>
       );
     });

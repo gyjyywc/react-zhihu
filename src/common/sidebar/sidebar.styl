@@ -43,16 +43,19 @@
         margin-right: 5px
   .side-home
     display: flex
+    width: 100%
     height: 50px
     line-height: 50px
     align-items: center
     color: $color-icon-d
     background: $color-background-l
-    .icon-home
-      margin: 0 15px
-      font-size: 28px
-    em
-      font-size: $font-size-large-s
+    a
+      @extend .sidebar .side-home
+      .icon-home
+        margin: 0 15px
+        font-size: 28px
+      em
+        font-size: $font-size-large-s
   .side-scroll
     position: fixed
     top: 150px
@@ -61,12 +64,17 @@
     box-sizing: border-box
     overflow: hidden;
     li
+      display: inline-block
       position: relative
-      padding: 0 30px 0 15px
       width: 100%
       height: 50px
       line-height: 50px
       box-sizing: border-box
+      a
+        @extend .sidebar .side-scroll li
+        padding: 0 30px 0 15px
+      a.active
+        background: $color-background-d
       i
         position: absolute
         top: 15px

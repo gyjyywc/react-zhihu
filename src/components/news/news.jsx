@@ -36,26 +36,29 @@ class News extends Component {
     // 给顶部的 div 设置背景图片以及样式
     let img = this.state.data.image;
     let wrapper = document.getElementsByClassName('img-place-holder')[0];
-    wrapper.style.background = `url(${img}) center no-repeat`;
-    wrapper.style.backgroundSize = 'cover';
-    // 给顶部的 div 里设置 title 以及遮罩层
-    let title = document.createElement('em');
-    title.setAttribute('class', 'news-title');
-    title.textContent = this.state.data.title;
-    wrapper.appendChild(title);
-    // 图片来源
-    let imgSource = document.createElement('em');
-    imgSource.setAttribute('class', 'news-source');
-    imgSource.textContent = this.state.data.image_source;
-    wrapper.appendChild(imgSource);
-    // 遮罩层
-    let layer = document.createElement('div');
-    layer.setAttribute('class', 'news-layer');
-    wrapper.appendChild(layer);
+    // 主题列表部分有些没有图片，所以对其进行一次判断
+    if (wrapper) {
+      wrapper.style.background = `url(${img}) center no-repeat`;
+      wrapper.style.backgroundSize = 'cover';
+      // 给顶部的 div 里设置 title 以及遮罩层
+      let title = document.createElement('em');
+      title.setAttribute('class', 'news-title');
+      title.textContent = this.state.data.title;
+      wrapper.appendChild(title);
+      // 图片来源
+      let imgSource = document.createElement('em');
+      imgSource.setAttribute('class', 'news-source');
+      imgSource.textContent = this.state.data.image_source;
+      wrapper.appendChild(imgSource);
+      // 遮罩层
+      let layer = document.createElement('div');
+      layer.setAttribute('class', 'news-layer');
+      wrapper.appendChild(layer);
+    }
   }
 
   handleEmit() {
-    this.props.history.push('/index');
+    this.props.history.goBack();
   }
 
   render() {
@@ -71,8 +74,8 @@ class News extends Component {
     return (
       <div>
         {css}
-        <NewsHeader history={this.props.history} handleClick={this.handleEmit.bind(this)} />
-        <Scroll>
+        <NewsHeader handleClick={this.handleEmit.bind(this)} />
+        <Scroll className="news-scroll" id="newsScroll">
           <div dangerouslySetInnerHTML={{__html: this.state.data.body}} />
         </Scroll>
         <div className="loading-wrapper" id="loadingWrapper">

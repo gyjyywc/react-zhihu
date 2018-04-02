@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 import './list-view.styl';
 
 class ListView extends Component {
-
-  emitClick(viewItem) {
-    this.props.listViewData.handleClick(viewItem);
-  }
 
   formatStringDate(item) {
     let year = item.substr(0, 4);
@@ -63,20 +60,20 @@ class ListView extends Component {
           );
         } else if (viewItem.images) {
           view = (
-            <div className="list-item__with-img"
-                 key={viewItem.id + '-' + index}
-                 onClick={() => this.emitClick(viewItem)}>
+            <Link className="list-item__with-img"
+                  key={viewItem.id + '-' + index}
+                  to={'/news/' + viewItem.id}>
               <em>{viewItem.title}</em>
               <img src={viewItem.images[0]} alt="" />
-            </div>
+            </Link>
           );
         } else if (!viewItem.image && !viewItem.images) {
           view = (
-            <div className="list-item__without-img"
-                 key={viewItem.id + '-' + index}
-                 onClick={() => this.emitClick(viewItem)}>
+            <Link className="list-item__without-img"
+                  key={viewItem.id + '-' + index}
+                  to={'/news/' + viewItem.id}>
               <em>{viewItem.title}</em>
-            </div>
+            </Link>
           );
         }
         return view;

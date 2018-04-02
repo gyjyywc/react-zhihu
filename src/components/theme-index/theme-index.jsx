@@ -18,10 +18,10 @@ class themeIndex extends Component {
     headerTitle: '',
     description: '',
     newsId: 0,
+    pathId: '',
     listViewData: {
       viewList: [],
       editors: [],
-      handleClick: {},
     },
     scrollEvent: {
       scrollToEnd: {},
@@ -31,8 +31,6 @@ class themeIndex extends Component {
   static transform = prefixStyle('transform');
   static listenScrollRealTime = 3;
   static animationDelay = 200;
-  static scrollDistance = 60;
-  static scrollAnimationDuration = 700;
 
   componentWillMount() {
     getThemeNews(this.props.match.params.themesId)
@@ -42,7 +40,6 @@ class themeIndex extends Component {
           listViewData: {
             viewList: response.stories.slice(0, 20),
             editors: response.editors,
-            handleClick: this.handleEmit.bind(this),
           },
           editors: response.editors,
           bannerImg: response.image,
@@ -70,7 +67,8 @@ class themeIndex extends Component {
       scrollEvent: {
         // 不 bind this 就无法再函数里使用指向 ProxyComponent 的 this 关键字
         scrollToEnd: this.scrollToEnd.bind(this),
-      }
+      },
+      pathId: this.props.match.params.themesId
     });
   }
 
@@ -94,14 +92,6 @@ class themeIndex extends Component {
   }
 
   handleDoubleClick() {
-  }
-
-  handleSidebarClick(themesId) {
-    this.props.history.push('/theme-index/' + themesId);
-  }
-
-  handleEmit(newsItem) {
-    this.props.history.push('/news/' + newsItem.id);
   }
 
   handleListViewWrapperTouchStart(e) {
@@ -259,7 +249,7 @@ class themeIndex extends Component {
              onClick={(e) => {
                this.handleClickOfSidebar(e);
              }}>
-          <Sidebar themeData={this.state.themeData} emitClick={this.handleSidebarClick.bind(this)} />
+          <Sidebar themeData={this.state.themeData} />
         </div>
       </div>
     );

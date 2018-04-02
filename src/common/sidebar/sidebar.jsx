@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
+import {NavLink, Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Scroll from 'common/scroll/scroll';
+import {sidebarClickOut} from "assets/js/common";
 import './sidebar.styl'
 
 class Sidebar extends Component {
@@ -15,27 +17,22 @@ class Sidebar extends Component {
     themeData: PropTypes.array.isRequired
   };
 
-  handleClick(themesId) {
-    this.props.emitClick(themesId);
-  }
-
   render() {
     let nameLists;
     if (this.props.themeData) {
       let nameList;
       nameLists = this.props.themeData.map((item, index) => {
         nameList = (
-          <li key={item.id + '-' + index} onClick={() => {
-            this.handleClick(item.id);
-          }}>
-            <em>{item.name}</em>
+          <li key={item.id + '-' + index}>
+            <NavLink to={'/theme-index/' + item.id}>
+              <em>{item.name}</em>
+            </NavLink>
             <i className="icon-add" />
           </li>
         );
         return nameList;
       });
     }
-
     return (
       <div className="sidebar" id="sidebar">
         <div className="side-header">
@@ -53,8 +50,10 @@ class Sidebar extends Component {
           </span>
         </div>
         <div className="side-home">
-          <i className="icon-home" />
-          <em>首页</em>
+          <Link to="/index">
+            <i className="icon-home" />
+            <em>首页</em>
+          </Link>
         </div>
         <Scroll className="side-scroll" id="sideScroll" refreshFlag={this.props.scrollRefresh}>
           <ul className="theme-wrapper">

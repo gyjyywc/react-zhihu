@@ -18,13 +18,10 @@ class Index extends Component {
     headerTitle: '首页',
     scrollRefresh: 0,
     bannerData: {
-      topList: [],
-      handleClick: {}
+      topList: []
     },
     listViewData: {
-      viewList: [],
-      date: [],
-      handleClick: {}
+      viewList: []
     },
     scrollEvent: {
       scrollToEnd: {},
@@ -43,13 +40,11 @@ class Index extends Component {
       .then((response) => {
         this.setState({
           bannerData: {
-            topList: response.top_stories,
-            handleClick: this.handleEmit.bind(this)
+            topList: response.top_stories
           },
           listViewData: {
             // 数据封装成 result 风格
-            viewList: [{date: response.date}].concat(response.stories),
-            handleClick: this.handleEmit.bind(this)
+            viewList: [{date: response.date}].concat(response.stories)
           },
           nowDate: response.date
         });
@@ -169,14 +164,6 @@ class Index extends Component {
     }
   }
 
-  handleSidebarClick(themesId) {
-    this.props.history.push('/theme-index/' + themesId);
-  }
-
-  handleEmit(newsItem) {
-    this.props.history.push('/news/' + newsItem.id);
-  }
-
   handleDoubleClick() {
     let targetEle = document.getElementById('scrollWrapper');
     // 通过 refs 取得 scroll 组件，从而得以调用 scroll 组件的 scrollToElement 方法
@@ -214,7 +201,6 @@ class Index extends Component {
             listViewData: {
               // 数据封装成 result 风格
               viewList: this.state.listViewData.viewList.concat([{date: response.date}].concat(response.stories)),
-              handleClick: this.handleEmit.bind(this),
             }
           });
         }
@@ -305,7 +291,7 @@ class Index extends Component {
              onClick={(e) => {
                this.handleClickOfSidebar(e);
              }}>
-          <Sidebar themeData={this.state.themeData} emitClick={this.handleSidebarClick.bind(this)} />
+          <Sidebar themeData={this.state.themeData} />
         </div>
       </div>
     );
