@@ -165,7 +165,7 @@ class Index extends Component {
   }
 
   handleDoubleClick() {
-    let targetEle = document.getElementById('scrollWrapper');
+    let targetEle = document.getElementById('listScroll');
     // 通过 refs 取得 scroll 组件，从而得以调用 scroll 组件的 scrollToElement 方法
     this.refs.listScroll.scrollToElement(targetEle, Index.scrollAnimationDuration)
   }
