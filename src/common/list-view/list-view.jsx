@@ -24,7 +24,33 @@ class ListView extends Component {
   }
 
   render() {
+    let editors;
     let views;
+    // 主题部分头部的主编部分
+    if (this.props.listViewData.editors) {
+      let editor;
+      editors = (
+        <div className="list-editors">
+          {
+            this.props.listViewData.editors.map((item, index) => {
+              if (index === 0) {
+                editor = (
+                  <span key={item.id + '-' + index}>
+              <em>主编</em>
+              <img src={item.avatar} alt="" />
+            </span>
+                );
+              } else {
+                editor = (
+                  <img key={item.id + '-' + index} src={item.avatar} alt="" />
+                );
+              }
+              return editor;
+            })
+          }
+        </div>
+      );
+    }
     if (this.props.listViewData.viewList) {
       let view;
       views = this.props.listViewData.viewList.map((viewItem, index) => {
@@ -60,6 +86,7 @@ class ListView extends Component {
 
     return (
       <div className="list-wrapper">
+        {editors}
         {views}
       </div>
 

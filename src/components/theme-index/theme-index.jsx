@@ -13,14 +13,15 @@ class themeIndex extends Component {
 
   state = {
     themeData: [],
-    editors: [],
+    totalData: [],
     bannerImg: '',
     headerTitle: '',
     description: '',
     newsId: 0,
     listViewData: {
       viewList: [],
-      handleClick: {}
+      editors: [],
+      handleClick: {},
     },
     scrollEvent: {
       scrollToEnd: {},
@@ -37,9 +38,10 @@ class themeIndex extends Component {
     getThemeNews(this.props.match.params.themesId)
       .then((response) => {
         this.setState({
-          // themeData: response.stories,
+          totalData: response.stories.slice(20, response.stories.length),
           listViewData: {
             viewList: response.stories.slice(0, 20),
+            editors: response.editors,
             handleClick: this.handleEmit.bind(this),
           },
           editors: response.editors,
@@ -48,7 +50,7 @@ class themeIndex extends Component {
           description: response.description,
         });
         Loading.hideLoading('loadingWrapper');
-        document.getElementById('listLoading').style.display = 'block';
+        Loading.showLoading('listLoading');
       })
       .catch((error) => {
         console.error('内部错误，错误原因: ' + error);
@@ -193,26 +195,15 @@ class themeIndex extends Component {
   }
 
   scrollToEnd() {
-    console.log('到底啦!');
-    // getPreviousNews(this.state.nowDate)
-    //   .then((response) => {
-    //     // 简单 alert 一下好了，一般没人能坚持翻到 2013 年吧。
-    //     if (response.date === '20130520') {
-    //       return alert('没有更多消息了');
-    //     } else {
-    //       this.setState({
-    //         nowDate: response.date,
-    //         listViewData: {
-    //           // 数据封装成 result 风格
-    //           viewList: this.state.listViewData.viewList.concat([{date: response.date}].concat(response.stories)),
-    //           handleClick: this.handleEmit.bind(this),
-    //         }
-    //       });
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error('内部错误，错误原因: ' + error);
-    //   });
+    if (this.state.totalData.length > 0) {
+      this.setState({
+        listViewData: {
+          viewList: this.state.listViewData.viewList.concat(this.state.totalData.splice(0, 20))
+        },
+      });
+    } else {
+      Loading.hideLoading('listLoading');
+    }
   }
 
   render() {

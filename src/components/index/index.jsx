@@ -54,7 +54,7 @@ class Index extends Component {
           nowDate: response.date
         });
         Loading.hideLoading('loadingWrapper');
-        document.getElementById('listLoading').style.display = 'block';
+        Loading.showLoading('listLoading');
       })
       .catch((error) => {
         console.error('内部错误，错误原因: ' + error);

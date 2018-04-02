@@ -16,6 +16,10 @@ class Loading extends Component {
     document.getElementById(id).style.display = 'none';
   }
 
+  static showLoading(id) {
+    document.getElementById(id).style.display = 'block';
+  }
+
   render() {
     return (
       <div className="loading">
