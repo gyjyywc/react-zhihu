@@ -9,7 +9,7 @@ import {prefixStyle} from "assets/js/utils";
 import {sidebarClickIn, sidebarClickOut} from "assets/js/common";
 import './theme-index.styl'
 
-class themeIndex extends Component {
+class ThemeIndex extends Component {
 
   state = {
     themeData: [],
@@ -95,12 +95,10 @@ class themeIndex extends Component {
   }
 
   handleListViewWrapperTouchStart(e) {
-    this.startY = e.touches[0].pageY;
     this.startX = e.touches[0].pageX;
   }
 
   handleListViewWrapperTouchMove(e) {
-    this.endY = e.touches[0].pageY;
     this.endX = e.touches[0].pageX;
     let sidebar = this.refs.sidebarWrapper.children[0];
     let deltaX = this.endX - this.startX;
@@ -115,7 +113,7 @@ class themeIndex extends Component {
       if (percent > 0) {
         percent = 0;
       }
-      sidebar.style[themeIndex.transform] = `translate3d(${percent}%,0,0)`;
+      sidebar.style[ThemeIndex.transform] = `translate3d(${percent}%,0,0)`;
       this.refs.sidebarWrapper.style.background = `rgba(0,0,0,${backgroundOpacity})`
 
     }
@@ -125,17 +123,17 @@ class themeIndex extends Component {
     let sidebar = this.refs.sidebarWrapper.children[0];
     let sidebarWrapper = this.refs.sidebarWrapper;
     if (this.translateInPercent >= 50) {
-      sidebar.style[themeIndex.transform] = 'translate3d(0,0,0)';
+      sidebar.style[ThemeIndex.transform] = 'translate3d(0,0,0)';
       sidebarWrapper.style.background = 'rgba(0,0,0,0.3)';
     } else if (this.translateInPercent < 50) {
-      sidebar.style[themeIndex.transform] = 'translate3d(-100%,0,0)';
+      sidebar.style[ThemeIndex.transform] = 'translate3d(-100%,0,0)';
       sidebarWrapper.style.background = 'transparent';
       if (this.listViewWrapperTimer) {
         clearTimeout(this.listViewWrapperTimer);
       }
       this.listViewWrapperTimer = setTimeout(() => {
         sidebarWrapper.style.display = 'none';
-      }, themeIndex.animationDelay);
+      }, ThemeIndex.animationDelay);
     }
   }
 
@@ -160,7 +158,7 @@ class themeIndex extends Component {
         if (this.translateOutPercent > 100) {
           this.translateOutPercent = 100;
         }
-        sidebar.style[themeIndex.transform] = `translate3d(-${this.translateOutPercent}%,0,0)`;
+        sidebar.style[ThemeIndex.transform] = `translate3d(-${this.translateOutPercent}%,0,0)`;
         this.refs.sidebarWrapper.style.background = `rgba(0,0,0,${backgroundOpacity})`
       }
     }
@@ -170,16 +168,16 @@ class themeIndex extends Component {
     let sidebar = this.refs.sidebarWrapper.children[0];
     let sidebarWrapper = this.refs.sidebarWrapper;
     if (this.translateOutPercent >= 50) {
-      sidebar.style[themeIndex.transform] = 'translate3d(-100%,0,0)';
+      sidebar.style[ThemeIndex.transform] = 'translate3d(-100%,0,0)';
       sidebarWrapper.style.background = 'transparent';
       if (this.sidebarScrollTimer) {
         clearTimeout(this.sidebarScrollTimer);
       }
       this.sidebarScrollTimer = setTimeout(() => {
         sidebarWrapper.style.display = 'none';
-      }, themeIndex.animationDelay);
+      }, ThemeIndex.animationDelay);
     } else if (this.translateOutPercent < 50) {
-      sidebar.style[themeIndex.transform] = 'translate3d(0,0,0)';
+      sidebar.style[ThemeIndex.transform] = 'translate3d(0,0,0)';
       sidebarWrapper.style.background = 'rgba(0,0,0,0.3)';
     }
   }
@@ -206,7 +204,7 @@ class themeIndex extends Component {
         <Scroll className="list-scroll"
                 id="listScroll"
                 ref="listScroll"
-                probeType={themeIndex.listenScrollRealTime}
+                probeType={ThemeIndex.listenScrollRealTime}
                 scrollEvent={this.state.scrollEvent}>
           <div className="slider-wrapper" id="sliderWrapper">
             <div className="slider-content">
@@ -256,4 +254,6 @@ class themeIndex extends Component {
   }
 }
 
-export default themeIndex;
+export default function (props) {
+  return (<ThemeIndex {...props} key={new Date().getTime()} />);
+}
