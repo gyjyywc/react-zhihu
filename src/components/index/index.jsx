@@ -74,6 +74,11 @@ class Index extends Component {
     });
   }
 
+  componentWillReceiveProps() {
+    // 在 index 页面点击 sidebar 里的首页时隐藏
+    sidebarClickOut();
+  }
+
   handleListViewWrapperTouchStart(e) {
     this.startY = e.touches[0].pageY;
     this.startX = e.touches[0].pageX;
@@ -97,7 +102,6 @@ class Index extends Component {
       }
       sidebar.style[Index.transform] = `translate3d(${percent}%,0,0)`;
       this.refs.sidebarWrapper.style.background = `rgba(0,0,0,${backgroundOpacity})`
-
     }
   }
 

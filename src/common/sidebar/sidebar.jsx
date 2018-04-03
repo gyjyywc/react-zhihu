@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {NavLink, Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Scroll from 'common/scroll/scroll';
-import {sidebarClickOut} from "assets/js/common";
 import './sidebar.styl'
 
 class Sidebar extends Component {
