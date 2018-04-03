@@ -56,7 +56,7 @@ class Banner extends Component {
   init() {
     clearTimeout(this.timer);
     this.setState({
-      currentPageIndex: 0
+      currentIndex: 0
     });
     this.setSliderWidthAndHeight();
     this.initDots();
@@ -101,7 +101,7 @@ class Banner extends Component {
       },
       bounce: false
     });
-    this.scroll.on('touchEnd', () => {
+    this.scroll.on('scrollEnd', () => {
       let index = this.scroll.getCurrentPage().pageX;
       this.setState({
         currentIndex: index

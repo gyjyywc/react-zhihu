@@ -8,7 +8,6 @@ import {getThemeNews, getThemes} from 'api/index';
 import {prefixStyle} from "assets/js/utils";
 import {sidebarClickIn, sidebarClickOut} from "assets/js/common";
 import './theme-index.styl'
-import Index from "../index";
 
 class ThemeIndex extends Component {
 
