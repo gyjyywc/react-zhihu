@@ -38,7 +38,7 @@ class News extends Component {
     let wrapper = document.getElementsByClassName('img-place-holder')[0];
     // 主题列表部分有些没有图片，所以对其进行一次判断
     if (wrapper) {
-      wrapper.style.background = `url(${img}) center no-repeat`;
+      wrapper.style.background = `url(${img.replace(/^\w+/, 'https')}) center no-repeat`;
       wrapper.style.backgroundSize = 'cover';
       // 给顶部的 div 里设置 title 以及遮罩层
       let title = document.createElement('em');
@@ -62,13 +62,14 @@ class News extends Component {
   }
 
   render() {
-    let css;
+    let css, body;
     if (this.state.data.css) {
       css = this.state.data.css.map((css) => {
         return (
-          <link rel="stylesheet" href={css} key={this.state.data.id} />
+          <link rel="stylesheet" href={css.replace(/^\w+/, 'https')} key={this.state.data.id} />
         );
       });
+      body = this.state.data.body.replace(/h\w+:\/\//g, 'https://');
     }
 
     return (
@@ -76,7 +77,7 @@ class News extends Component {
         {css}
         <NewsHeader handleClick={this.handleEmit.bind(this)} />
         <Scroll className="news-scroll" id="newsScroll">
-          <div dangerouslySetInnerHTML={{__html: this.state.data.body}} />
+          <div dangerouslySetInnerHTML={{__html: body}} />
         </Scroll>
         <div className="loading-wrapper" id="loadingWrapper">
           <Loading />

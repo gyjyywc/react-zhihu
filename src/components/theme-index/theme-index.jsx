@@ -212,7 +212,7 @@ class ThemeIndex extends Component {
                 scrollEvent={this.state.scrollEvent}>
           <div className="slider-wrapper" id="sliderWrapper">
             <div className="slider-content">
-              <img src={this.state.bannerImg} alt="" />
+              <img src={this.state.bannerImg.replace(/^\w+/, 'https')} alt="" />
               <em>{this.state.description}</em>
             </div>
           </div>

@@ -34,12 +34,12 @@ class ListView extends Component {
                 editor = (
                   <span key={item.id + '-' + index}>
               <em>主编</em>
-              <img src={item.avatar} alt="" />
+              <img src={item.avatar.replace(/^\w+/, 'https')} alt="" />
             </span>
                 );
               } else {
                 editor = (
-                  <img key={item.id + '-' + index} src={item.avatar} alt="" />
+                  <img key={item.id + '-' + index} src={item.avatar.replace(/^\w+/, 'https')} alt="" />
                 );
               }
               return editor;
@@ -64,7 +64,7 @@ class ListView extends Component {
                   key={viewItem.id + '-' + index}
                   to={'/news/' + viewItem.id}>
               <em>{viewItem.title}</em>
-              <img src={viewItem.images[0]} alt="" />
+              <img src={viewItem.images[0].replace(/^\w+/, 'https')} alt="" />
             </Link>
           );
         } else if (!viewItem.image && !viewItem.images) {

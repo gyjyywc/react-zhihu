@@ -150,7 +150,7 @@ class Banner extends Component {
       return (
         <div key={topStory.id}>
           <Link style={style} to={'/news/' + topStory.id}>
-            <img src={topStory.image} alt="" />
+            <img src={topStory.image.replace(/^\w+/, 'https')} alt="" />
             <em>{topStory.title}</em>
           </Link>
         </div>
