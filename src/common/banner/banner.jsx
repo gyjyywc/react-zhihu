@@ -6,11 +6,13 @@ import PropTypes from 'prop-types';
 import './banner.styl';
 
 class Banner extends Component {
-
-  state = {
-    dots: [],
-    currentIndex: 0
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      dots: [],
+      currentIndex: 0
+    };
+  }
 
   // 定义默认值
   static defaultProps = {

@@ -4,30 +4,37 @@ import ListView from 'common/list-view/list-view';
 import Scroll from 'common/scroll/scroll';
 import Loading from 'common/loading/loading'
 import Sidebar from 'common/sidebar/sidebar'
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {getLatest, getPreviousNews, getThemes} from 'api/index';
 import {prefixStyle} from "assets/js/utils";
 import {sidebarClickIn, sidebarClickOut} from "assets/js/common";
 import './index.styl'
 
 class Index extends Component {
-  state = {
-    newsId: 0,
-    nowDate: 0,
-    themeData: [],
-    headerTitle: '首页',
-    scrollRefresh: 0,
-    bannerData: {
-      topList: []
-    },
-    listViewData: {
-      viewList: []
-    },
-    scrollEvent: {
-      scrollToEnd: {},
-      scroll: {}
-    }
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      newsId: 0,
+      nowDate: 0,
+      themeData: [],
+      headerTitle: '首页',
+      scrollRefresh: 0,
+      bannerData: {
+        topList: []
+      },
+      listViewData: {
+        viewList: []
+      },
+      scrollEvent: {
+        scrollToEnd: {},
+        scroll: {}
+      }
+    };
+    this.handleClickOfMHeader = this.handleClickOfMHeader.bind(this);
+    this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    this.scrollToEnd = this.scrollToEnd.bind(this);
+    this.scroll = this.scroll.bind(this);
+  }
 
   static transform = prefixStyle('transform');
   static listenScrollRealTime = 3;
@@ -68,8 +75,8 @@ class Index extends Component {
     this.setState({
       scrollEvent: {
         // 不 bind this 就无法再函数里使用指向 ProxyComponent 的 this 关键字
-        scrollToEnd: this.scrollToEnd.bind(this),
-        scroll: this.scroll.bind(this)
+        scrollToEnd: this.scrollToEnd,
+        scroll: this.scroll
       }
     });
   }
@@ -245,11 +252,11 @@ class Index extends Component {
 
   render() {
     return (
-      <div>
+      <Fragment>
         <MHeader title={this.state.headerTitle}
                  icon="icon-setting"
-                 emitClick={this.handleClickOfMHeader.bind(this)}
-                 emitDoubleClick={this.handleDoubleClick.bind(this)} />
+                 emitClick={this.handleClickOfMHeader}
+                 emitDoubleClick={this.handleDoubleClick} />
         <Scroll className="list-scroll"
                 id="listScroll"
                 ref="listScroll"
@@ -297,7 +304,7 @@ class Index extends Component {
              }}>
           <Sidebar themeData={this.state.themeData} />
         </div>
-      </div>
+      </Fragment>
     );
   }
 }

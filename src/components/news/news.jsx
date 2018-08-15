@@ -1,16 +1,19 @@
 import NewsHeader from 'common/news-header/news-header';
 import Scroll from 'common/scroll/scroll';
 import Loading from 'common/loading/loading'
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {getNews} from 'api/index';
 import './news.styl';
 
 class News extends Component {
-
-  state = {
-    data: {},
-    interval: 1
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: {},
+      interval: 1
+    };
+    this.handleEmit = this.handleEmit.bind(this);
+  }
 
   componentWillMount() {
     getNews(this.props.match.params.newsId)
@@ -73,16 +76,16 @@ class News extends Component {
     }
 
     return (
-      <div>
+      <Fragment>
         {css}
-        <NewsHeader handleClick={this.handleEmit.bind(this)} />
+        <NewsHeader handleClick={this.handleEmit} />
         <Scroll className="news-scroll" id="newsScroll">
           <div dangerouslySetInnerHTML={{__html: body}} />
         </Scroll>
         <div className="loading-wrapper" id="loadingWrapper">
           <Loading />
         </div>
-      </div>
+      </Fragment>
     );
   }
 }

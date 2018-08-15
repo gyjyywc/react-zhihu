@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import MHeader from 'common/m-header/m-header';
 import ListView from 'common/list-view/list-view';
 import Scroll from 'common/scroll/scroll';
@@ -10,23 +10,28 @@ import {sidebarClickIn, sidebarClickOut} from "assets/js/common";
 import './theme-index.styl'
 
 class ThemeIndex extends Component {
-
-  state = {
-    themeData: [],
-    totalData: [],
-    bannerImg: '',
-    headerTitle: '',
-    description: '',
-    newsId: 0,
-    pathId: '',
-    listViewData: {
-      viewList: [],
-      editors: [],
-    },
-    scrollEvent: {
-      scrollToEnd: {},
-    }
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      themeData: [],
+      totalData: [],
+      bannerImg: '',
+      headerTitle: '',
+      description: '',
+      newsId: 0,
+      pathId: '',
+      listViewData: {
+        viewList: [],
+        editors: [],
+      },
+      scrollEvent: {
+        scrollToEnd: {},
+      }
+    };
+    this.scrollToEnd = this.scrollToEnd.bind(this);
+    this.handleClickOfMHeader = this.handleClickOfMHeader.bind(this);
+    this.handleDoubleClick = this.handleDoubleClick.bind(this);
+  }
 
   static transform = prefixStyle('transform');
   static listenScrollRealTime = 3;
@@ -67,7 +72,7 @@ class ThemeIndex extends Component {
     this.setState({
       scrollEvent: {
         // 不 bind this 就无法再函数里使用指向 ProxyComponent 的 this 关键字
-        scrollToEnd: this.scrollToEnd.bind(this),
+        scrollToEnd: this.scrollToEnd,
       },
       pathId: this.props.match.params.themesId
     });
@@ -200,11 +205,11 @@ class ThemeIndex extends Component {
 
   render() {
     return (
-      <div>
+      <Fragment>
         <MHeader title={this.state.headerTitle}
                  icon="icon-add"
-                 emitClick={this.handleClickOfMHeader.bind(this)}
-                 emitDoubleClick={this.handleDoubleClick.bind(this)} />
+                 emitClick={this.handleClickOfMHeader}
+                 emitDoubleClick={this.handleDoubleClick} />
         <Scroll className="list-scroll"
                 id="listScroll"
                 ref="listScroll"
@@ -253,7 +258,7 @@ class ThemeIndex extends Component {
              }}>
           <Sidebar themeData={this.state.themeData} />
         </div>
-      </div>
+      </Fragment>
     );
   }
 }
