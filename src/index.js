@@ -1,8 +1,8 @@
 import './assets/stylus/index.styl';
-
+import { AppContainer } from 'react-hot-loader';
+import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux'
 import store from './store'
 import fastclick from 'fastclick';
 import Router from './router/index';
@@ -10,12 +10,14 @@ import Router from './router/index';
 fastclick.attach(document.body);
 
 const render = Component => {
-    ReactDOM.render(
-        <Provider store={store}>
-            <Component/>
-        </Provider >,
-        document.getElementById('root'),
-    )
+  ReactDOM.render(
+      <AppContainer>
+        <Provider store={ store }>
+          <Component />
+        </Provider>
+      </AppContainer>,
+      document.getElementById('root'),
+  )
 };
 
 render(Router);
