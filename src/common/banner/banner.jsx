@@ -1,7 +1,7 @@
 import BScroll from 'better-scroll';
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
-import {addClass} from 'assets/js/utils';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { addClass } from 'assets/js/utils';
 import PropTypes from 'prop-types';
 import './banner.styl';
 
@@ -150,35 +150,35 @@ class Banner extends Component {
 
     let topStoryPic = this.props.bannerData.topList.map((topStory) => {
       return (
-        <div key={topStory.id}>
-          <Link style={style} to={'/news/' + topStory.id}>
-            <img src={topStory.image.replace(/^\w+/, 'https')} alt="" />
-            <em>{topStory.title}</em>
-          </Link>
-        </div>
+          <div key={ topStory.id }>
+            <Link style={ style } to={ '/news/' + topStory.id }>
+              <img src={ topStory.image.replace(/^\w+/, 'https') } alt="" />
+              <em>{ topStory.title }</em>
+            </Link>
+          </div>
       );
     });
 
     let dots = this.state.dots.map((dot, index) => {
       let dotElement;
       if (this.state.currentIndex === index) {
-        dotElement = <span className="dot active" key={index} />;
+        dotElement = <span className="dot active" key={ index } />;
       } else {
-        dotElement = <span className="dot" key={index} />
+        dotElement = <span className="dot" key={ index } />
       }
       return (dotElement);
 
     });
 
     return (
-      <div className="slider" id="slider">
-        <div className="slider-group" id="sliderGroup">
-          {topStoryPic}
+        <div className="slider" id="slider">
+          <div className="slider-group" id="sliderGroup">
+            { topStoryPic }
+          </div>
+          <div className="dots">
+            { dots }
+          </div>
         </div>
-        <div className="dots">
-          {dots}
-        </div>
-      </div>
     );
   }
 }

@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {HashRouter, Switch, Route, Redirect} from 'react-router-dom';
-import asyncComponent from '../utils/asyncComponent';
+import React, { Component } from 'react';
+import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
+import asyncComponent from './asyncComponent';
 
 import Splash from "components/splash/splash";
 
@@ -12,15 +12,15 @@ const ThemeIndex = asyncComponent(() => import("components/theme-index/theme-ind
 class RouteConfig extends Component {
   render() {
     return (
-      <HashRouter>
-        <Switch>
-          <Route path="/" exact component={Splash} />
-          <Route path="/index" component={Index} />
-          <Route path="/news/:newsId" component={News} />
-          <Route path="/theme-index/:themesId" component={ThemeIndex} />
-          <Redirect to="/" />
-        </Switch>
-      </HashRouter>
+        <HashRouter>
+          <Switch>
+            <Route path="/" exact component={ Splash } />
+            <Route path="/index" exact component={ Index } />
+            <Route path="/news/:newsId" exact component={ News } />
+            <Route path="/theme-index/:themesId" exact component={ ThemeIndex } />
+            <Redirect to="/" />
+          </Switch>
+        </HashRouter>
     )
   }
 }

@@ -26,12 +26,12 @@ class MHeader extends Component {
         this.emitDoubleClick();
       }}>
         <span className="left-content">
-          <i className="icon-nav" onClick={() => {
+          <i className="iconfont icon-nav" onClick={() => {
             this.emitClick();
           }} />
           <em>{this.props.title}</em>
         </span>
-        <i className={"header-icon " + this.props.icon} />
+        <i className={"iconfont " + this.props.icon} />
       </div>
     );
   }

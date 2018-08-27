@@ -26,7 +26,7 @@ class Sidebar extends Component {
             <NavLink to={'/theme-index/' + item.id}>
               <em>{item.name}</em>
             </NavLink>
-            <i className="icon-add" />
+            <i className="iconfont icon-add" />
           </li>
         );
         return nameList;
@@ -40,17 +40,17 @@ class Sidebar extends Component {
         </div>
         <div className="side-nav">
           <span className="left-content">
-            <i className="icon-favorite" />
+            <i className="iconfont icon-favorite" />
             <em>我的收藏</em>
           </span>
           <span className="right-content">
-            <i className="icon-download" />
+            <i className="iconfont icon-download" />
             <em>离线下载</em>
           </span>
         </div>
         <div className="side-home">
           <Link to="/index">
-            <i className="icon-home" />
+            <i className="iconfont icon-home" />
             <em>首页</em>
           </Link>
         </div>
