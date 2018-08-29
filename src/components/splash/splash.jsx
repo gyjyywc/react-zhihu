@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {prefixStyle} from 'assets/js/utils';
+import React, { Component } from 'react';
+import { prefixStyle } from 'assets/js/utils';
 import './splash.styl';
 
 class Splash extends Component {
@@ -16,10 +16,11 @@ class Splash extends Component {
   }
 
   render() {
+    const splashImg = require('./splash.jpg');
     return (
-      <div className="splash-wrapper">
-        <img className="splash" id="splashImg" src={require('./splash.jpg')} alt="你,的名字."/>
-      </div>
+        <div className="splash-wrapper">
+          <img className="splash" id="splashImg" src={ splashImg } alt="你,的名字." />
+        </div>
     );
   }
 }

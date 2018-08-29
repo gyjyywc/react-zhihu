@@ -1,12 +1,12 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import MHeader from 'common/m-header/m-header';
 import ListView from 'common/list-view/list-view';
 import Scroll from 'common/scroll/scroll';
 import Loading from 'common/loading/loading'
 import Sidebar from 'common/sidebar/sidebar'
-import {getThemeNews, getThemes} from 'api/index';
-import {prefixStyle} from "assets/js/utils";
-import {sidebarClickIn, sidebarClickOut} from "assets/js/common";
+import { getThemeNews, getThemes } from 'api/index';
+import { prefixStyle } from "assets/js/utils";
+import { sidebarClickIn, sidebarClickOut } from "assets/js/common";
 import './theme-index.styl'
 
 class ThemeIndex extends Component {
@@ -31,6 +31,13 @@ class ThemeIndex extends Component {
     this.scrollToEnd = this.scrollToEnd.bind(this);
     this.handleClickOfMHeader = this.handleClickOfMHeader.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    this.handleListViewWrapperTouchStart = this.handleListViewWrapperTouchStart.bind(this);
+    this.handleListViewWrapperTouchMove = this.handleListViewWrapperTouchMove.bind(this);
+    this.handleListViewWrapperTouchEnd = this.handleListViewWrapperTouchEnd.bind(this);
+    this.handleSidebarTouchStart = this.handleSidebarTouchStart.bind(this);
+    this.handleSidebarTouchMove = this.handleSidebarTouchMove.bind(this);
+    this.handleSidebarTouchEnd = this.handleSidebarTouchEnd.bind(this);
+    this.handleClickOfSidebar = this.handleClickOfSidebar.bind(this);
   }
 
   static transform = prefixStyle('transform');
@@ -40,34 +47,34 @@ class ThemeIndex extends Component {
 
   componentWillMount() {
     getThemeNews(this.props.match.params.themesId)
-      .then((response) => {
-        this.setState({
-          totalData: response.stories.slice(20, response.stories.length),
-          listViewData: {
-            viewList: response.stories.slice(0, 20),
+        .then((response) => {
+          this.setState({
+            totalData: response.stories.slice(20, response.stories.length),
+            listViewData: {
+              viewList: response.stories.slice(0, 20),
+              editors: response.editors,
+            },
             editors: response.editors,
-          },
-          editors: response.editors,
-          bannerImg: response.image,
-          headerTitle: response.name,
-          description: response.description,
+            bannerImg: response.image,
+            headerTitle: response.name,
+            description: response.description,
+          });
+          Loading.hideLoading('loadingWrapper');
+          Loading.showLoading('listLoading');
+        })
+        .catch((error) => {
+          console.error('内部错误，错误原因: ' + error);
         });
-        Loading.hideLoading('loadingWrapper');
-        Loading.showLoading('listLoading');
-      })
-      .catch((error) => {
-        console.error('内部错误，错误原因: ' + error);
-      });
 
     getThemes()
-      .then((response) => {
-        this.setState({
-          themeData: response.others
+        .then((response) => {
+          this.setState({
+            themeData: response.others
+          });
+        })
+        .catch((error) => {
+          console.error('内部错误，错误原因: ' + error);
         });
-      })
-      .catch((error) => {
-        console.error('内部错误，错误原因: ' + error);
-      });
 
     this.setState({
       scrollEvent: {
@@ -204,65 +211,66 @@ class ThemeIndex extends Component {
   }
 
   render() {
+    const {
+      headerTitle,
+      scrollEvent,
+      bannerImg,
+      description,
+      listViewData,
+      themeData
+    } = this.state;
+
     return (
-      <Fragment>
-        <MHeader title={this.state.headerTitle}
-                 icon="icon-add"
-                 emitClick={this.handleClickOfMHeader}
-                 emitDoubleClick={this.handleDoubleClick} />
-        <Scroll className="list-scroll"
-                id="listScroll"
-                ref="listScroll"
-                probeType={ThemeIndex.listenScrollRealTime}
-                scrollEvent={this.state.scrollEvent}>
-          <div className="slider-wrapper" id="sliderWrapper">
-            <div className="slider-content">
-              <img src={this.state.bannerImg.replace(/^\w+/, 'https')} alt="" />
-              <em>{this.state.description}</em>
+        <Fragment>
+          <MHeader
+              title={ headerTitle }
+              icon="icon-add"
+              emitClick={ this.handleClickOfMHeader }
+              emitDoubleClick={ this.handleDoubleClick } />
+          <Scroll
+              className="list-scroll"
+              id="listScroll"
+              ref="listScroll"
+              probeType={ ThemeIndex.listenScrollRealTime }
+              scrollEvent={ scrollEvent }>
+            <div className="slider-wrapper" id="sliderWrapper">
+              <div className="slider-content">
+                <img
+                    src={ bannerImg.replace(/^\w+/, 'https') }
+                    alt={ description } />
+                <em>{ description }</em>
+              </div>
             </div>
+            <div
+                id="listViewWrapper"
+                ref="listViewWrapper"
+                onTouchStart={ this.handleListViewWrapperTouchStart }
+                onTouchMove={ this.handleListViewWrapperTouchMove }
+                onTouchEnd={ this.handleListViewWrapperTouchEnd }>
+              <ListView listViewData={ listViewData } />
+            </div>
+            <div className="list-loading" id="listLoading">
+              <Loading title="" />
+            </div>
+          </Scroll>
+          <div className="loading-wrapper" id="loadingWrapper">
+            <Loading />
           </div>
-          <div id="listViewWrapper"
-               ref="listViewWrapper"
-               onTouchStart={(e) => {
-                 this.handleListViewWrapperTouchStart(e);
-               }}
-               onTouchMove={(e) => {
-                 this.handleListViewWrapperTouchMove(e);
-               }}
-               onTouchEnd={() => {
-                 this.handleListViewWrapperTouchEnd();
-               }}>
-            <ListView listViewData={this.state.listViewData} />
+          <div
+              className="sidebar-wrapper"
+              id="sidebarWrapper"
+              ref="sidebarWrapper"
+              onTouchStart={ this.handleSidebarTouchStart }
+              onTouchMove={ this.handleSidebarTouchMove }
+              onTouchEnd={ this.handleSidebarTouchEnd }
+              onClick={ this.handleClickOfSidebar }>
+            <Sidebar themeData={ themeData } />
           </div>
-          <div className="list-loading" id="listLoading">
-            <Loading title="" />
-          </div>
-        </Scroll>
-        <div className="loading-wrapper" id="loadingWrapper">
-          <Loading />
-        </div>
-        <div className="sidebar-wrapper"
-             id="sidebarWrapper"
-             ref="sidebarWrapper"
-             onTouchStart={(e) => {
-               this.handleSidebarTouchStart(e);
-             }}
-             onTouchMove={(e) => {
-               this.handleSidebarTouchMove(e);
-             }}
-             onTouchEnd={() => {
-               this.handleSidebarTouchEnd();
-             }}
-             onClick={(e) => {
-               this.handleClickOfSidebar(e);
-             }}>
-          <Sidebar themeData={this.state.themeData} />
-        </div>
-      </Fragment>
+        </Fragment>
     );
   }
 }
 
 export default function (props) {
-  return (<ThemeIndex {...props} key={new Date().getTime()} />);
+  return (<ThemeIndex { ...props } key={ new Date().getTime() } />);
 }

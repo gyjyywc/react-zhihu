@@ -4,10 +4,10 @@ import ListView from 'common/list-view/list-view';
 import Scroll from 'common/scroll/scroll';
 import Loading from 'common/loading/loading'
 import Sidebar from 'common/sidebar/sidebar'
-import React, {Component, Fragment} from 'react';
-import {getLatest, getPreviousNews, getThemes} from 'api/index';
-import {prefixStyle} from "assets/js/utils";
-import {sidebarClickIn, sidebarClickOut} from "assets/js/common";
+import React, { Component, Fragment } from 'react';
+import { getLatest, getPreviousNews, getThemes } from 'api/index';
+import { prefixStyle } from "assets/js/utils";
+import { sidebarClickIn, sidebarClickOut } from "assets/js/common";
 import './index.styl'
 
 class Index extends Component {
@@ -34,6 +34,13 @@ class Index extends Component {
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
     this.scrollToEnd = this.scrollToEnd.bind(this);
     this.scroll = this.scroll.bind(this);
+    this.handleListViewWrapperTouchStart = this.handleListViewWrapperTouchStart.bind(this);
+    this.handleListViewWrapperTouchMove = this.handleListViewWrapperTouchMove.bind(this);
+    this.handleListViewWrapperTouchEnd = this.handleListViewWrapperTouchEnd.bind(this);
+    this.handleSidebarTouchStart = this.handleSidebarTouchStart.bind(this);
+    this.handleSidebarTouchMove = this.handleSidebarTouchMove.bind(this);
+    this.handleSidebarTouchEnd = this.handleSidebarTouchEnd.bind(this);
+    this.handleClickOfSidebar = this.handleClickOfSidebar.bind(this);
   }
 
   static transform = prefixStyle('transform');
@@ -44,33 +51,33 @@ class Index extends Component {
 
   componentWillMount() {
     getLatest()
-      .then((response) => {
-        this.setState({
-          bannerData: {
-            topList: response.top_stories
-          },
-          listViewData: {
-            // 数据封装成 result 风格
-            viewList: [{date: response.date}].concat(response.stories)
-          },
-          nowDate: response.date
+        .then((response) => {
+          this.setState({
+            bannerData: {
+              topList: response.top_stories
+            },
+            listViewData: {
+              // 数据封装成 result 风格
+              viewList: [{ date: response.date }].concat(response.stories)
+            },
+            nowDate: response.date
+          });
+          Loading.hideLoading('loadingWrapper');
+          Loading.showLoading('listLoading');
+        })
+        .catch((error) => {
+          console.error('内部错误，错误原因: ' + error);
         });
-        Loading.hideLoading('loadingWrapper');
-        Loading.showLoading('listLoading');
-      })
-      .catch((error) => {
-        console.error('内部错误，错误原因: ' + error);
-      });
 
     getThemes()
-      .then((response) => {
-        this.setState({
-          themeData: response.others
+        .then((response) => {
+          this.setState({
+            themeData: response.others
+          });
+        })
+        .catch((error) => {
+          console.error('内部错误，错误原因: ' + error);
         });
-      })
-      .catch((error) => {
-        console.error('内部错误，错误原因: ' + error);
-      });
 
     this.setState({
       scrollEvent: {
@@ -131,6 +138,10 @@ class Index extends Component {
   }
 
   handleSidebarTouchStart(e) {
+    // 为了引发 scroll 中 state 的变化，从而使得 scroll refresh
+    this.setState({
+      scrollRefresh: 2
+    });
     this.xStart = e.touches[0].pageX;
     this.YStart = e.touches[0].pageY;
   }
@@ -202,23 +213,23 @@ class Index extends Component {
 
   scrollToEnd() {
     getPreviousNews(this.state.nowDate)
-      .then((response) => {
-        // 简单 alert 一下好了，一般没人能坚持翻到 2013 年吧。
-        if (response.date === '20130520') {
-          return alert('没有更多消息了');
-        } else {
-          this.setState({
-            nowDate: response.date,
-            listViewData: {
-              // 数据封装成 result 风格
-              viewList: this.state.listViewData.viewList.concat([{date: response.date}].concat(response.stories)),
-            }
-          });
-        }
-      })
-      .catch((error) => {
-        console.error('内部错误，错误原因: ' + error);
-      });
+        .then((response) => {
+          // 简单 alert 一下好了，一般没人能坚持翻到 2013 年吧。
+          if (response.date === '20130520') {
+            return alert('没有更多消息了');
+          } else {
+            this.setState({
+              nowDate: response.date,
+              listViewData: {
+                // 数据封装成 result 风格
+                viewList: this.state.listViewData.viewList.concat([{ date: response.date }].concat(response.stories)),
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          console.error('内部错误，错误原因: ' + error);
+        });
   }
 
   scroll(position) {
@@ -251,60 +262,58 @@ class Index extends Component {
   }
 
   render() {
+    const {
+      headerTitle,
+      scrollEvent,
+      bannerData,
+      listViewData,
+      themeData
+    } = this.state;
+
     return (
-      <Fragment>
-        <MHeader title={this.state.headerTitle}
-                 icon="icon-setting"
-                 emitClick={this.handleClickOfMHeader}
-                 emitDoubleClick={this.handleDoubleClick} />
-        <Scroll className="list-scroll"
-                id="listScroll"
-                ref="listScroll"
-                probeType={Index.listenScrollRealTime}
-                scrollEvent={this.state.scrollEvent}>
-          <div className="slider-wrapper" id="sliderWrapper">
-            <div className="slider-content">
-              <Banner bannerData={this.state.bannerData} />
+        <Fragment>
+          <MHeader
+              title={ headerTitle }
+              icon="icon-setting"
+              emitClick={ this.handleClickOfMHeader }
+              emitDoubleClick={ this.handleDoubleClick } />
+          <Scroll
+              className="list-scroll"
+              id="listScroll"
+              ref="listScroll"
+              probeType={ Index.listenScrollRealTime }
+              scrollEvent={ scrollEvent }>
+            <div className="slider-wrapper" id="sliderWrapper">
+              <div className="slider-content">
+                <Banner bannerData={ bannerData } />
+              </div>
             </div>
+            <div
+                id="listViewWrapper"
+                ref="listViewWrapper"
+                onTouchStart={ this.handleListViewWrapperTouchStart }
+                onTouchMove={ this.handleListViewWrapperTouchMove }
+                onTouchEnd={ this.handleListViewWrapperTouchEnd }>
+              <ListView listViewData={ listViewData } />
+            </div>
+            <div className="list-loading" id="listLoading">
+              <Loading title="" />
+            </div>
+          </Scroll>
+          <div className="loading-wrapper" id="loadingWrapper">
+            <Loading />
           </div>
-          <div id="listViewWrapper"
-               ref="listViewWrapper"
-               onTouchStart={(e) => {
-                 this.handleListViewWrapperTouchStart(e);
-               }}
-               onTouchMove={(e) => {
-                 this.handleListViewWrapperTouchMove(e);
-               }}
-               onTouchEnd={() => {
-                 this.handleListViewWrapperTouchEnd();
-               }}>
-            <ListView listViewData={this.state.listViewData} />
+          <div
+              className="sidebar-wrapper"
+              id="sidebarWrapper"
+              ref="sidebarWrapper"
+              onTouchStart={ this.handleSidebarTouchStart }
+              onTouchMove={ this.handleSidebarTouchMove }
+              onTouchEnd={ this.handleSidebarTouchEnd }
+              onClick={ this.handleClickOfSidebar }>
+            <Sidebar themeData={ themeData } />
           </div>
-          <div className="list-loading" id="listLoading">
-            <Loading title="" />
-          </div>
-        </Scroll>
-        <div className="loading-wrapper" id="loadingWrapper">
-          <Loading />
-        </div>
-        <div className="sidebar-wrapper"
-             id="sidebarWrapper"
-             ref="sidebarWrapper"
-             onTouchStart={(e) => {
-               this.handleSidebarTouchStart(e);
-             }}
-             onTouchMove={(e) => {
-               this.handleSidebarTouchMove(e);
-             }}
-             onTouchEnd={() => {
-               this.handleSidebarTouchEnd();
-             }}
-             onClick={(e) => {
-               this.handleClickOfSidebar(e);
-             }}>
-          <Sidebar themeData={this.state.themeData} />
-        </div>
-      </Fragment>
+        </Fragment>
     );
   }
 }

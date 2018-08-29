@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './loading.styl';
 
@@ -21,11 +21,14 @@ class Loading extends Component {
   }
 
   render() {
+    const { title } = this.props;
+    const loadingPic = require('./loading.gif');
+
     return (
-      <div className="loading">
-        <img width="24" height="24" src={require('./loading.gif')} alt="加载中" />
-        <p className="desc">{this.props.title}</p>
-      </div>
+        <div className="loading">
+          <img width="24" height="24" src={ loadingPic } alt="加载中" />
+          <p className="desc">{ title }</p>
+        </div>
     );
   }
 }

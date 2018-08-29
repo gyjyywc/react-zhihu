@@ -1,9 +1,10 @@
 import NewsHeader from 'common/news-header/news-header';
 import Scroll from 'common/scroll/scroll';
 import Loading from 'common/loading/loading'
-import React, {Component, Fragment} from 'react';
-import {getNews} from 'api/index';
+import React, { Component, Fragment } from 'react';
+import { getNews } from 'api/index';
 import './news.styl';
+import './news.css';
 
 class News extends Component {
   constructor(props) {
@@ -17,15 +18,15 @@ class News extends Component {
 
   componentWillMount() {
     getNews(this.props.match.params.newsId)
-      .then((response) => {
-        this.setState({
-          data: response
-        });
-        Loading.hideLoading('loadingWrapper');
-      })
-      .catch((error) => {
-        console.error('内部错误，错误原因: ' + error);
-      })
+        .then((response) => {
+          this.setState({
+            data: response
+          });
+          Loading.hideLoading('loadingWrapper');
+        })
+        .catch((error) => {
+          console.error('内部错误，错误原因: ' + error);
+        })
   }
 
   // 保证拥有数据后正确创建头部
@@ -65,27 +66,20 @@ class News extends Component {
   }
 
   render() {
-    let css, body;
-    if (this.state.data.css) {
-      css = this.state.data.css.map((css) => {
-        return (
-          <link rel="stylesheet" href={css.replace(/^\w+/, 'https')} key={this.state.data.id} />
-        );
-      });
-      body = this.state.data.body.replace(/h\w+:\/\//g, 'https://');
+    const { body } = this.state.data;
+    if (body) {
+      body.replace(/h\w+:\/\//g, 'https://');
     }
-
     return (
-      <Fragment>
-        {css}
-        <NewsHeader handleClick={this.handleEmit} />
-        <Scroll className="news-scroll" id="newsScroll">
-          <div dangerouslySetInnerHTML={{__html: body}} />
-        </Scroll>
-        <div className="loading-wrapper" id="loadingWrapper">
-          <Loading />
-        </div>
-      </Fragment>
+        <Fragment>
+          <NewsHeader handleClick={ this.handleEmit } />
+          <Scroll className="news-scroll" id="newsScroll">
+            <div dangerouslySetInnerHTML={ { __html: body } } />
+          </Scroll>
+          <div className="loading-wrapper" id="loadingWrapper">
+            <Loading />
+          </div>
+        </Fragment>
     );
   }
 }

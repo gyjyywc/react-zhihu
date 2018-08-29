@@ -14,6 +14,16 @@ class Banner extends Component {
     };
   }
 
+  // 定义类型
+  static propTypes = {
+    bannerData: PropTypes.object.isRequired,
+    loop: PropTypes.bool,
+    autoPlay: PropTypes.bool,
+    interval: PropTypes.number,
+    threshold: PropTypes.number,
+    speed: PropTypes.number
+  };
+
   // 定义默认值
   static defaultProps = {
     bannerData: {
@@ -28,16 +38,6 @@ class Banner extends Component {
 
   static percent = 0.613;
   static initDelay = 300;
-
-  // 定义类型
-  static propTypes = {
-    bannerData: PropTypes.object.isRequired,
-    loop: PropTypes.bool,
-    autoPlay: PropTypes.bool,
-    interval: PropTypes.number,
-    threshold: PropTypes.number,
-    speed: PropTypes.number
-  };
 
   // 慢网速下也能正确渲染banner
   componentWillReceiveProps(nextProps) {
@@ -142,13 +142,12 @@ class Banner extends Component {
     }, this.props.interval);
   }
 
-  render() {
+  getTopStoryPic(topList) {
     // 先隐藏，然后通过 setSliderWidthAndHeight 添加 slider-item 类名后显示，保证低网速下体验
     let style = {
       display: 'none'
     };
-
-    let topStoryPic = this.props.bannerData.topList.map((topStory) => {
+    return topList.map((topStory) => {
       return (
           <div key={ topStory.id }>
             <Link style={ style } to={ '/news/' + topStory.id }>
@@ -157,9 +156,11 @@ class Banner extends Component {
             </Link>
           </div>
       );
-    });
+    })
+  }
 
-    let dots = this.state.dots.map((dot, index) => {
+  getDots(dots) {
+    return dots.map((dot, index) => {
       let dotElement;
       if (this.state.currentIndex === index) {
         dotElement = <span className="dot active" key={ index } />;
@@ -167,16 +168,20 @@ class Banner extends Component {
         dotElement = <span className="dot" key={ index } />
       }
       return (dotElement);
+    })
+  }
 
-    });
+  render() {
+    const { topList } = this.props.bannerData
+    const { dots } = this.state
 
     return (
         <div className="slider" id="slider">
           <div className="slider-group" id="sliderGroup">
-            { topStoryPic }
+            { this.getTopStoryPic(topList) }
           </div>
           <div className="dots">
-            { dots }
+            { this.getDots(dots) }
           </div>
         </div>
     );

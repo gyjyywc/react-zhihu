@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './list-view.styl';
 
 class ListView extends Component {
@@ -20,73 +20,83 @@ class ListView extends Component {
     }
   }
 
-  render() {
-    let editors;
-    let views;
+  getEditors(editors) {
     // 主题部分头部的主编部分
-    if (this.props.listViewData.editors) {
+    if (editors) {
       let editor;
-      editors = (
-        <div className="list-editors">
-          {
-            this.props.listViewData.editors.map((item, index) => {
-              if (index === 0) {
-                editor = (
-                  <span key={item.id + '-' + index}>
-              <em>主编</em>
-              <img src={item.avatar.replace(/^\w+/, 'https')} alt="" />
-            </span>
-                );
-              } else {
-                editor = (
-                  <img key={item.id + '-' + index} src={item.avatar.replace(/^\w+/, 'https')} alt="" />
-                );
-              }
-              return editor;
-            })
+      const getEditor = function () {
+        editors.map((item, index) => {
+          if (index === 0) {
+            editor = (
+                <span key={ item.id + '-' + index }>
+                  <em>主编</em>
+                  <img
+                      src={ item.avatar.replace(/^\w+/, 'https') }
+                      alt={ item.id } />
+                </span>);
+          } else {
+            editor = (
+                <img
+                    key={ item.id + '-' + index }
+                    src={ item.avatar.replace(/^\w+/, 'https') }
+                    alt={ item.id } />
+            );
           }
-        </div>
-      );
+          return editor;
+        })
+      };
+      return (
+          <div className="list-editors">
+            { getEditor() }
+          </div>
+      )
     }
-    if (this.props.listViewData.viewList) {
+  }
+
+  getViews(viewList) {
+    if (viewList) {
       let view;
-      views = this.props.listViewData.viewList.map((viewItem, index) => {
+      return viewList.map((viewItem, index) => {
         if (!viewItem.id) {
           view = (
-            <p className="list-date"
-               key={index}>
-              {this.formatStringDate(viewItem.date)}
-            </p>
+              <p className="list-date" key={ index }>
+                { this.formatStringDate(viewItem.date) }
+              </p>
           );
         } else if (viewItem.images) {
           view = (
-            <Link className="list-item__with-img"
-                  key={viewItem.id + '-' + index}
-                  to={'/news/' + viewItem.id}>
-              <em>{viewItem.title}</em>
-              <img src={viewItem.images[0].replace(/^\w+/, 'https')} alt="" />
-            </Link>
+              <Link
+                  className="list-item__with-img"
+                  key={ viewItem.id + '-' + index }
+                  to={ '/news/' + viewItem.id }>
+                <em>{ viewItem.title }</em>
+                <img
+                    src={ viewItem.images[0].replace(/^\w+/, 'https') }
+                    alt={ viewItem.title } />
+              </Link>
           );
         } else if (!viewItem.image && !viewItem.images) {
           view = (
-            <Link className="list-item__without-img"
-                  key={viewItem.id + '-' + index}
-                  to={'/news/' + viewItem.id}>
-              <em>{viewItem.title}</em>
-            </Link>
+              <Link
+                  className="list-item__without-img"
+                  key={ viewItem.id + '-' + index }
+                  to={ '/news/' + viewItem.id }>
+                <em>{ viewItem.title }</em>
+              </Link>
           );
         }
         return view;
       });
     }
+  }
 
-
+  render() {
+    const { editors, viewList } = this.props.listViewData;
     return (
-      <div className="list-wrapper">
-        {editors}
-        {views}
-      </div>
-
+        <div className="list-wrapper">
+          { this.getEditors(editors) }
+          { this.getViews(viewList) }
+        </div>
     );
   }
 }

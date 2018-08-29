@@ -1,20 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import BScroll from 'better-scroll';
 import PropTypes from 'prop-types';
 
 class Scroll extends Component {
-
-  static defaultProps = {
-    className: '',
-    id: '',
-    refreshFlag: 0,
-    probeType: 2,
-    click: true,
-    bounceTime: 700,
-    refreshDelay: 300,
-    scrollEvent: {}
-  };
-
   // 定义类型
   static propTypes = {
     id: PropTypes.string.isRequired,
@@ -25,6 +13,17 @@ class Scroll extends Component {
     data: PropTypes.array,
     refreshDelay: PropTypes.number,
     scrollEvent: PropTypes.object,
+  };
+
+  static defaultProps = {
+    className: '',
+    id: '',
+    refreshFlag: 0,
+    probeType: 2,
+    click: true,
+    bounceTime: 700,
+    refreshDelay: 300,
+    scrollEvent: {}
   };
 
   static scroll;
@@ -42,35 +41,42 @@ class Scroll extends Component {
   }
 
   initScroll() {
-    let wrapper = document.getElementById(this.props.id);
+    const {
+      id,
+      click,
+      probeType,
+      bounceTime,
+      scrollEvent
+    } = this.props;
+    let wrapper = document.getElementById(id);
     if (!wrapper) {
       return;
     }
     this.scroll = new BScroll(wrapper, {
-      probeType: this.props.probeType,
-      click: this.props.click,
-      bounceTime: this.props.bounceTime
+      probeType: probeType,
+      click: click,
+      bounceTime: bounceTime
     });
-    if (this.props.scrollEvent.scroll) {
+    if (scrollEvent.scroll) {
       this.scroll.on('scroll', (position) => {
-        this.props.scrollEvent.scroll(position);
+        scrollEvent.scroll(position);
       });
     }
-    if (this.props.scrollEvent.scrollToEnd) {
+    if (scrollEvent.scrollToEnd) {
       this.scroll.on('scrollEnd', (position) => {
         if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
-          this.props.scrollEvent.scrollToEnd(position);
+          scrollEvent.scrollToEnd(position);
         }
       });
     }
-    if (this.props.scrollEvent.touchEnd) {
+    if (scrollEvent.touchEnd) {
       this.scroll.on('touchEnd', (position) => {
-        this.props.scrollEvent.touchEnd(position);
+        scrollEvent.touchEnd(position);
       });
     }
-    if (this.props.scrollEvent.beforeScroll) {
+    if (scrollEvent.beforeScroll) {
       this.scroll.on('beforeScrollStart', () => {
-        this.props.scrollEvent.beforeScroll();
+        scrollEvent.beforeScroll();
       });
     }
   }
@@ -97,11 +103,11 @@ class Scroll extends Component {
   }
 
   render() {
+    const { className, id, children } = this.props;
     return (
-      <div className={this.props.className}
-           id={this.props.id}>
-        <div>{this.props.children}</div>
-      </div>
+        <div className={ className } id={ id }>
+          <div>{ children }</div>
+        </div>
     );
   }
 }
