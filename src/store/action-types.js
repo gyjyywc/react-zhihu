@@ -1,1 +1,1 @@
-export const HEAD_TITLE = 'header_title';
+export const HEAD_TITLE = 'header_title'

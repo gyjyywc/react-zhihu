@@ -1,7 +1,8 @@
-import * as actionTypes from './action-types';
+import * as actionTypes from './action-types'
 
-export const searchFocus = function () {
+export const changeHeadTitle = function (data) {
   return {
-    type: actionTypes.INPUT_FOCUS
+    type: actionTypes.HEAD_TITLE,
+    data
   }
-};
+}
